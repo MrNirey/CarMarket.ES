@@ -15,82 +15,89 @@
             --text-main: #ffffff;
             --text-muted: #8a8d93;
             --border-color: #262930;
+            --border-radius-flat: 2px; /* Квадратные строгие углы */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; user-select: none; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
+        /* Sidebar */
         .sidebar { width: 240px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 20px; justify-content: space-between; }
         .logo { font-size: 22px; font-weight: 800; color: var(--text-main); font-style: italic; margin-bottom: 30px; }
         .logo span { color: var(--accent-blue); }
-        .menu-group { display: flex; flex-direction: column; gap: 8px; }
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: var(--text-muted); text-decoration: none; border-radius: 8px; font-size: 14px; cursor: pointer; }
+        .menu-group { display: flex; flex-direction: column; gap: 4px; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: var(--text-muted); text-decoration: none; border-radius: var(--border-radius-flat); font-size: 14px; cursor: pointer; }
         .menu-item.active { background-color: var(--accent-blue); color: white; }
 
+        /* Main Container */
         .main-container { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; position: relative; }
         .header { height: 70px; background-color: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 30px; }
         .header-filters { display: flex; gap: 15px; }
-        .dropdown-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 6px; font-size: 14px; display: flex; align-items: center; gap: 8px; cursor: pointer;}
+        .dropdown-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: var(--border-radius-flat); font-size: 14px; display: flex; align-items: center; gap: 8px; cursor: pointer;}
         .user-balance { display: flex; align-items: center; gap: 20px; }
         .balance-cash { color: #2ecc71; font-weight: bold; font-size: 14px; }
-        .btn-create { background: var(--accent-blue); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .btn-create { background: var(--accent-blue); color: white; border: none; padding: 8px 16px; border-radius: var(--border-radius-flat); font-weight: 600; cursor: pointer; }
 
+        /* Screens */
         .screen { display: none; flex: 1; padding: 25px; overflow-y: auto; }
         .screen.active-screen { display: flex; }
         
+        /* CATALOG SCREEN */
         .catalog-layout { display: flex; gap: 25px; width: 100%; }
-        .filters-sidebar { width: 260px; background: var(--bg-card); border-radius: 12px; padding: 20px; height: fit-content; border: 1px solid var(--border-color); }
+        .filters-sidebar { width: 260px; background: var(--bg-card); border-radius: var(--border-radius-flat); padding: 20px; height: fit-content; border: 1px solid var(--border-color); }
         .filter-section { margin-bottom: 20px; }
         .filter-title { font-size: 13px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; font-weight: 600;}
         
         .filter-type-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .filter-btn { background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+        .filter-btn { background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px; border-radius: var(--border-radius-flat); font-size: 12px; cursor: pointer; }
         .filter-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
 
-        .search-input { width: 100%; background: var(--bg-main); border: 1px solid var(--border-color); color: white; padding: 10px; border-radius: 6px; font-size: 14px; margin-bottom: 15px; }
-        .cars-grid { flex: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; height: fit-content;}
+        .search-input { width: 100%; background: var(--bg-main); border: 1px solid var(--border-color); color: white; padding: 10px; border-radius: var(--border-radius-flat); font-size: 14px; margin-bottom: 15px; }
+        .cars-grid { flex: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; height: fit-content;}
         
-        .car-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; cursor: pointer; transition: all 0.2s; position: relative;}
-        .car-card:hover { transform: translateY(-4px); border-color: var(--accent-blue); }
-        .car-card-img-container { width: 100%; height: 130px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; overflow: hidden;}
-        .car-card-img { max-width: 90%; max-height: 90%; object-fit: contain; }
-        .car-card-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
-        .car-card-dealer { font-size: 12px; color: var(--text-muted); margin-bottom: 15px; }
-        .car-card-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 10px; font-size: 13px; }
-        .car-card-price { font-weight: 700; }
+        /* Car Cards - Строгие Квадратные */
+        .car-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius-flat); padding: 12px; cursor: pointer; transition: all 0.2s; position: relative;}
+        .car-card:hover { border-color: var(--accent-blue); }
+        .car-card-img-container { width: 100%; height: 110px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; background: rgba(255,255,255,0.01); border-radius: 0px; overflow: hidden;}
+        .car-card-img { max-width: 95%; max-height: 95%; object-fit: contain; }
+        .car-card-title { font-size: 15px; font-weight: 600; margin-bottom: 30px; }
+        .car-card-dealer { font-size: 12px; color: var(--text-muted); position: absolute; bottom: 35px; left: 12px; }
+        .car-card-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 8px; font-size: 12px; position: absolute; bottom: 12px; left: 12px; right: 12px; }
+        .car-card-price { font-weight: 700; color: #fff; }
 
+        /* DETAILS SCREEN */
         .details-layout { display: flex; flex-direction: column; gap: 20px; width: 100%; }
-        .btn-back { background: var(--bg-card); border: 1px solid var(--border-color); color: white; padding: 10px 18px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px;}
+        .btn-back { background: var(--bg-card); border: 1px solid var(--border-color); color: white; padding: 10px 18px; border-radius: var(--border-radius-flat); cursor: pointer; display: flex; align-items: center; gap: 8px;}
         .details-grid { display: grid; grid-template-columns: 1.3fr 1.7fr; gap: 25px; }
         
-        .main-product-card { background: var(--bg-card); border-radius: 12px; padding: 25px; border: 1px solid var(--border-color); }
-        .main-car-img-container { width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border-radius: 12px; margin-bottom: 20px;}
-        .main-car-img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        .main-product-card { background: var(--bg-card); border-radius: var(--border-radius-flat); padding: 25px; border: 1px solid var(--border-color); }
+        .main-car-img-container { width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.01); border-radius: 0px; margin-bottom: 20px;}
+        .main-car-img { max-width: 95%; max-height: 95%; object-fit: contain; }
         
         .car-title-large { font-size: 24px; font-weight: 700; margin-bottom: 5px; }
         .car-price-large { font-size: 22px; color: var(--accent-green); font-weight: 700; margin-bottom: 20px; }
-        .btn-buy-now { width: 100%; background: var(--accent-blue); color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer; transition: background 0.2s; }
-        .btn-buy-now:hover { background: #1a66e8; }
+        .btn-buy-now { width: 100%; background: var(--accent-blue); color: white; border: none; padding: 14px; border-radius: var(--border-radius-flat); font-weight: 600; font-size: 15px; cursor: pointer; }
         
         .description-box { margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px; }
         .description-title { font-size: 14px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
         .description-text { font-size: 14px; color: #cbd5e1; line-height: 1.5; }
 
-        .specs-box { background: var(--bg-card); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); }
+        .specs-box { background: var(--bg-card); border-radius: var(--border-radius-flat); padding: 20px; border: 1px solid var(--border-color); }
         .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px; }
         .spec-item { display: flex; justify-content: space-between; border-bottom: 1px solid #22252a; padding-bottom: 6px; }
         .spec-label { color: var(--text-muted); }
         
-        .table-container { background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; }
+        .table-container { background: var(--bg-card); border-radius: var(--border-radius-flat); border: 1px solid var(--border-color); overflow: hidden; }
         .table-title { padding: 15px; font-size: 14px; font-weight: 600; border-bottom: 1px solid var(--border-color); background: #18191d;}
         .offers-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
         .offers-table th { background: #1e2024; color: var(--text-muted); padding: 12px 15px; font-size: 11px; text-transform: uppercase;}
         .offers-table td { padding: 14px 15px; border-bottom: 1px solid var(--border-color); }
         .offers-table tr:hover td { background: #202227; }
 
+        /* Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--bg-card); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-align: center; max-width: 400px; width: 100%;}
-        .btn-close-modal { margin-top: 20px; background: var(--accent-blue); color: white; border: none; padding: 10px 24px; border-radius: 6px; cursor: pointer; }
+        .modal-content { background: var(--bg-card); border: 1px solid var(--border-color); padding: 30px; border-radius: var(--border-radius-flat); text-align: center; max-width: 400px; width: 100%;}
+        .btn-close-modal { margin-top: 20px; background: var(--accent-blue); color: white; border: none; padding: 10px 24px; border-radius: var(--border-radius-flat); cursor: pointer; }
     </style>
 </head>
 <body>
@@ -195,53 +202,28 @@
     </div>
 
     <script>
+        // МАССИВ ИЗ 20 МАШИН (КАК НА СКРИНШОТЕ)
         const carsData = [
-            { 
-                id: 1, 
-                name: 'Volkswagen Golf', 
-                price: '$18 500', 
-                type: 'passenger',
-                qty: 18, 
-                img: 'golf.png', 
-                fallbackImg: 'https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA4L3Jhd3BpeGVsX29mZmljZV8zM19waG90b19vZl9hX3ZvbGtzd2FnZW5fZ29sZl9idXNpbmVzc19jYXJfX2lzb2xhdF82NDFjNzdjNC1mOTVkLTQ4YjEtODg4OC1lMDUwOTI4YzgxYjIucG5n.png',
-                year: '2020', drive: 'Передний', mileage: '57 000 км', transmission: 'Автомат',
-                desc: 'Пробный вариант. Надежный городской хэтчбек в отличном техническом состоянии. Полностью обслужен у дилера.',
-                offers: [
-                    { seller: 'Alexey Petrov', mileage: '57 000 км', transmission: 'Автомат', price: '$18 500' },
-                    { seller: 'Dmitriy Sokolov', mileage: '63 500 км', transmission: 'Автомат', price: '$17 990' },
-                    { seller: 'Ivan Kuznetsov', mileage: '48 200 км', transmission: 'Механика', price: '$19 200' }
-                ]
-            },
-            { 
-                id: 2, 
-                name: 'Skoda Octavia', 
-                price: '$20 900', 
-                type: 'passenger',
-                qty: 16, 
-                img: 'octavia.png', 
-                fallbackImg: 'https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA4L3Jhd3BpeGVsX29mZmljZV8yN19waG90b19vZl9hX3Nrb2RhX29jdGF2aWFfYnVzaW5lc3NfY2FyX2lzb2xhdGVkX29mX2RhMzhlMDI1LTVlM2UtNDQ3NS1hNWY4LWQyZDE3OGEyOWY3NS5wbmc.png',
-                year: '2021', drive: 'Передний', mileage: '42 000 км', transmission: 'Автомат',
-                desc: 'Пробный вариант. Практичный и вместительный лифтбек. Один владелец по документам, бережная эксплуатация.',
-                offers: [
-                    { seller: 'Sergey Volkov', mileage: '42 000 км', transmission: 'Автомат', price: '$20 900' },
-                    { seller: 'Pavel Morozov', mileage: '71 000 км', transmission: 'Автомат', price: '$19 500' }
-                ]
-            },
-            { 
-                id: 3, 
-                name: 'BMW 3 Series', 
-                price: '$32 900', 
-                type: 'passenger',
-                qty: 21, 
-                img: 'bmw.png', 
-                fallbackImg: 'https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA4L3Jhd3BpeGVsX29mZmljZV8yN19waG90b19vZl9hX2Jtd18zX3Nlcmllc19idXNpbmVzc19jYXJfaXNvbGF0ZWRfb2ZfODBmNzg1OTQtZTQ3Mi00ODcxLTk5MTMtMzg0NTFlNDVhNjg2LnAubbmc.png',
-                year: '2019', drive: 'Задний', mileage: '68 000 км', transmission: 'Автомат',
-                desc: 'Пробный вариант. Спортивный седан с отличной управляемостью. Динамичный двигатель, богатая комплектация.',
-                offers: [
-                    { seller: 'Andrey Smirnov', mileage: '68 000 км', transmission: 'Автомат', price: '$32 900' },
-                    { seller: 'Vladislav Nikitin', mileage: '55 000 км', transmission: 'Автомат', price: '$34 100' }
-                ]
-            }
+            { id: 1, name: 'Volkswagen Golf', price: '$18 500', type: 'passenger', qty: 18, year: '2020', drive: 'Передний', mileage: '57 000 км', transmission: 'Автомат', fallbackImg: 'https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA4L3Jhd3BpeGVsX29mZmljZV8zM19waG90b19vZl9hX3ZvbGtzd2FnZW5fZ29sZl9idXNpbmVzc19jYXJfX2lzb2xhdF82NDFjNzdjNC1mOTVkLTQ4YjEtODg4OC1lMDUwOTI4YzgxYjIucG5n.png' },
+            { id: 2, name: 'Skoda Octavia', price: '$20 900', type: 'passenger', qty: 16, year: '2021', drive: 'Передний', mileage: '42 000 км', transmission: 'Автомат', fallbackImg: 'https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA4L3Jhd3BpeGVsX29mZmljZV8yN19waG90b19vZl9hX3Nrb2RhX29jdGF2aWFfYnVzaW5lc3NfY2FyX2lzb2xhdGVkX29mX2RhMzhlMDI1LTVlM2UtNDQ3NS1hNWY4LWQyZDE3OGEyOWY3NS5wbmc.png' },
+            { id: 3, name: 'BMW 3 Series', price: '$32 900', type: 'passenger', qty: 21, year: '2019', drive: 'Задний', mileage: '68 000 км', transmission: 'Автомат', fallbackImg: 'https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA4L3Jhd3BpeGVsX29mZmljZV8yN19waG90b19vZl9hX2Jtd18zX3Nlcmllc19idXNpbmVzc19jYXJfaXNvbGF0ZWRfb2ZfODBmNzg1OTQtZTQ3Mi00ODcxLTk5MTMtMzg0NTFlNDVhNjg2LnAubbmc.png' },
+            { id: 4, name: 'Audi A4', price: '$28 900', type: 'passenger', qty: 14, year: '2020', drive: 'Передний', mileage: '61 000 км', transmission: 'Автомат', fallbackImg: 'https://www.pngmart.com/files/22/Audi-A4-PNG-Transparent.png' },
+            { id: 5, name: 'Mercedes-Benz C-Class', price: '$34 900', type: 'passenger', qty: 12, year: '2019', drive: 'Задний', mileage: '54 000 км', transmission: 'Автомат', fallbackImg: 'https://www.pngmart.com/files/22/Mercedes-Benz-C-Class-PNG-Isolated-Photo.png' },
+            { id: 6, name: 'Toyota Corolla', price: '$17 900', type: 'passenger', qty: 20, year: '2021', drive: 'Передний', mileage: '35 000 км', transmission: 'Вариатор', fallbackImg: 'https://www.pngmart.com/files/22/Toyota-Corolla-PNG-File.png' },
+            { id: 7, name: 'Honda Civic', price: '$19 900', type: 'passenger', qty: 15, year: '2020', drive: 'Передний', mileage: '49 000 км', transmission: 'Автомат', fallbackImg: 'https://www.pngmart.com/files/22/Honda-Civic-PNG-Transparent.png' },
+            { id: 8, name: 'Ford Focus', price: '$16 900', type: 'passenger', qty: 17, year: '2018', drive: 'Передний', mileage: '82 000 км', transmission: 'Робот', fallbackImg: 'https://www.pngmart.com/files/22/Ford-Focus-PNG-Photo.png' },
+            { id: 9, name: 'Peugeot 308', price: '$18 300', type: 'passenger', qty: 13, year: '2020', drive: 'Передний', mileage: '41 000 км', transmission: 'Автомат', fallbackImg: 'https://www.pngmart.com/files/22/Peugeot-308-PNG-Clipart.png' },
+            { id: 10, name: 'Renault Megane', price: '$17 200', type: 'passenger', qty: 11, year: '2019', drive: 'Передний', mileage: '73 000 км', transmission: 'Механика', fallbackImg: 'https://www.pngmart.com/files/22/Renault-Megane-PNG-Isolated-HD.png' },
+            { id: 11, name: 'Nissan Qashqai', price: '$22 900', type: 'passenger', qty: 13, year: '2020', drive: 'Передний', mileage: '45 000 км', transmission: 'Вариатор', fallbackImg: 'https://www.pngmart.com/files/22/Nissan-Qashqai-PNG-HD-Isolated.png' },
+            { id: 12, name: 'Volkswagen Tiguan', price: '$27 900', type: 'passenger', qty: 15, year: '2021', drive: 'Полный', mileage: '33 000 км', transmission: 'Робот', fallbackImg: 'https://www.pngmart.com/files/22/Volkswagen-Tiguan-PNG-Transparent.png' },
+            { id: 13, name: 'Volvo XC60', price: '$39 900', type: 'passenger', qty: 10, year: '2020', drive: 'Полный', mileage: '59 000 км', transmission: 'Автомат', fallbackImg: 'https://www.pngmart.com/files/22/Volvo-XC60-PNG-Isolated-HD.png' },
+            { id: 14, name: 'Audi Q5', price: '$37 900', type: 'passenger', qty: 9, year: '2019', drive: 'Полный', mileage: '66 000 км', transmission: 'Робот', fallbackImg: 'https://www.pngmart.com/files/22/Audi-Q5-PNG-Transparent-Image.png' },
+            { id: 15, name: 'BMW X3', price: '$41 900', type: 'passenger', qty: 8, year: '2020', drive: 'Полный', mileage: '51 000 км', transmission: 'Автомат', fallbackImg: 'https://www.pngmart.com/files/22/BMW-X3-PNG-Image.png' },
+            { id: 16, name: 'Tesla Model 3', price: '$35 900', type: 'passenger', qty: 7, year: '2021', drive: 'Полный', mileage: '28 000 км', transmission: 'Редуктор', fallbackImg: 'https://www.pngmart.com/files/22/Tesla-Model-3-PNG-Isolated-HD-Pictures.png' },
+            { id: 17, name: 'Volkswagen ID.4', price: '$32 500', type: 'passenger', qty: 6, year: '2022', drive: 'Задний', mileage: '19 000 км', transmission: 'Редуктор', fallbackImg: 'https://www.pngmart.com/files/22/Volkswagen-ID.4-PNG-Isolated-HD.png' },
+            { id: 18, name: 'Peugeot 2008', price: '$19 800', type: 'passenger', qty: 9, year: '2021', drive: 'Передний', mileage: '31 000 км', transmission: 'Автомат', fallbackImg: 'https://www.pngmart.com/files/22/Peugeot-2008-PNG-Isolated-Photo.png' },
+            { id: 19, name: 'Kia Sportage', price: '$22 400', type: 'passenger', qty: 11, year: '2020', drive: 'Передний', mileage: '54 000 км', transmission: 'Автомат', fallbackImg: 'https://www.pngmart.com/files/22/Kia-Sportage-PNG-Isolated-HD.png' },
+            { id: 20, name: 'Hyundai Tucson', price: '$23 900', type: 'passenger', qty: 10, year: '2021', drive: 'Передний', mileage: '41 000 км', transmission: 'Автомат', fallbackImg: 'https://www.pngmart.com/files/22/Hyundai-Tucson-PNG-Transparent-HD.png' }
         ];
 
         let selectedType = 'all';
@@ -268,7 +250,7 @@
                 card.onclick = () => openDetails(car);
                 card.innerHTML = `
                     <div class="car-card-img-container">
-                        <img src="${car.img}" onerror="this.onerror=null; this.src='${car.fallbackImg}';" class="car-card-img" alt="${car.name}">
+                        <img src="${car.name.toLowerCase().replace(/ /g, '_')}.png" onerror="this.onerror=null; this.src='${car.fallbackImg}';" class="car-card-img" alt="${car.name}">
                     </div>
                     <div class="car-card-title">${car.name}</div>
                     <div class="car-card-dealer">Официальный дилер</div>
@@ -285,28 +267,27 @@
             catalogScreen.classList.remove('active-screen');
             detailsScreen.classList.add('active-screen');
             const mainImg = document.getElementById('detail-img');
-            mainImg.src = car.img;
+            mainImg.src = `${car.name.toLowerCase().replace(/ /g, '_')}.png`;
             mainImg.onerror = function() { this.onerror = null; this.src = car.fallbackImg; };
             document.getElementById('detail-title').innerText = car.name;
             document.getElementById('detail-price').innerText = car.price;
-            document.getElementById('detail-desc').innerText = car.desc;
+            document.getElementById('detail-desc').innerText = `Пробный вариант. Великолепный ${car.name} в идеальном состоянии. Один владелец, бережная эксплуатация, оригинальный пробег ${car.mileage}. Пройдены все регламентные ТО.`;
             document.getElementById('spec-year').innerText = car.year;
             document.getElementById('spec-drive').innerText = car.drive;
             document.getElementById('spec-mileage').innerText = car.mileage;
             document.getElementById('spec-transmission').innerText = car.transmission;
+            
             const tbody = document.getElementById('offers-table-body');
-            tbody.innerHTML = '';
-            car.offers.forEach((offer, idx) => {
-                const tr = document.createElement('tr');
-                if(idx === 0) tr.className = 'row-active';
-                tr.innerHTML = `<td>${offer.seller}</td><td>${offer.mileage}</td><td>${offer.transmission}</td><td style="font-weight:bold; color:var(--accent-green);">${offer.price}</td>`;
-                tbody.appendChild(tr);
-            });
+            tbody.innerHTML = `
+                <tr class="row-active"><td>Alexey Petrov</td><td>${car.mileage}</td><td>${car.transmission}</td><td style="font-weight:bold; color:var(--accent-green);">${car.price}</td></tr>
+                <tr><td>Dmitriy Sokolov</td><td>63 500 км</td><td>Автомат</td><td>$17 990</td></tr>
+                <tr><td>Ivan Kuznetsov</td><td>48 200 км</td><td>Механика</td><td>$19 200</td></tr>
+            `;
         }
 
         document.getElementById('btn-back-to-catalog').onclick = () => { detailsScreen.classList.remove('active-screen'); catalogScreen.classList.add('active-screen'); };
-        document.getElementById('filter-all-btn').onclick = function() { document.getElementById('filter-cars-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'all'; };
-        document.getElementById('filter-cars-btn').onclick = function() { document.getElementById('filter-all-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'passenger'; };
+        document.getElementById('filter-all-btn').onclick = function() { document.getElementById('filter-cars-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'all'; renderCatalog();};
+        document.getElementById('filter-cars-btn').onclick = function() { document.getElementById('filter-all-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'passenger'; renderCatalog();};
         document.getElementById('apply-filters-btn').onclick = () => { renderCatalog(); };
         document.getElementById('action-buy-click').onclick = () => { const carName = document.getElementById('detail-title').innerText; document.getElementById('modal-car-name').innerText = `Вы успешно приобрели автомобиль ${carName} за один клик!`; modal.style.display = 'flex'; };
         document.getElementById('btn-close-modal').onclick = () => { modal.style.display = 'none'; };
