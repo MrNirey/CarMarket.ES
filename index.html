@@ -356,23 +356,21 @@
         let originalDeliveryCost = 0;
         let discountPercent = 0;
 
-        const catalogScreen = document.getElementById('screen-catalog');
+        // Поиск элементов с поддержкой разных названий классов/ID
+        const catalogScreen = document.getElementById('screen-catalog') || document.querySelector('.screen');
         const detailsScreen = document.getElementById('screen-details');
         const cartScreen = document.getElementById('screen-cart');
-        const carsGrid = document.getElementById('cars-grid-container');
+        const carsGrid = document.getElementById('cars-grid-container') || document.querySelector('.cars-grid') || document.getElementById('cars-grid');
         const modal = document.getElementById('success-modal');
 
         const menuTransport = document.getElementById('menu-transport-btn');
         const menuCart = document.getElementById('menu-cart-btn');
-        const headerFilters = document.querySelector('.header-filters');
 
-        // Отрисовка каталога
-      // БЕЗОПАСНАЯ ОТРИСОВКА КАТАЛОГА
+        // Улучшенный безопасный рендеринг каталога
         function renderCatalog() {
-            if (!carsGrid) return; // Защита, если контейнер не найден
+            if (!carsGrid) return;
             carsGrid.innerHTML = '';
             
-            // Безопасное получение поискового слова (даже если ID другой или отсутствует)
             const searchEl = document.getElementById('search-input') || document.querySelector('.search-input');
             const searchWord = searchEl ? searchEl.value.toLowerCase() : '';
             
@@ -383,7 +381,7 @@
             });
             
             if (filteredCars.length === 0) {
-                carsGrid.innerHTML = '<div style="padding: 20px; color: var(--text-muted);">Машины не найдены</div>';
+                carsGrid.innerHTML = '<div style="padding: 35px; color: var(--text-muted); text-align: center; width: 100%;">Автомобили не найдены</div>';
                 return;
             }
 
@@ -405,29 +403,26 @@
                 carsGrid.appendChild(card);
             });
         }
-        // Переключение вкладок
-        // Переключение вкладок с фиксом верхнего меню
+
+        // Переключение экранов
         function switchScreen(target) {
-            catalogScreen.classList.remove('active-screen');
-            detailsScreen.classList.remove('active-screen');
-            cartScreen.classList.remove('active-screen');
+            if (catalogScreen) catalogScreen.classList.remove('active-screen');
+            if (detailsScreen) detailsScreen.classList.remove('active-screen');
+            if (cartScreen) cartScreen.classList.remove('active-screen');
             if (menuTransport) menuTransport.classList.remove('active');
             if (menuCart) menuCart.classList.remove('active');
             
-            // Находим блоки фильтров автосалона, чтобы они не ломали верстку в корзине
             const salonFilters = document.querySelector('.header-filters'); 
             
             if (target === 'catalog') {
-                catalogScreen.classList.add('active-screen');
-                if (menuTransport) menuTransport.add('active');
-                if (salonFilters) salonFilters.style.display = 'flex'; // Показываем фильтры в каталоге
+                if (catalogScreen) catalogScreen.classList.add('active-screen');
+                if (menuTransport) menuTransport.classList.add('active');
+                if (salonFilters) salonFilters.style.display = 'flex';
             } else if (target === 'cart') {
-                cartScreen.classList.add('active-screen');
+                if (cartScreen) cartScreen.classList.add('active-screen');
                 if (menuCart) menuCart.classList.add('active');
-                if (salonFilters) salonFilters.style.display = 'none'; // Полностью убираем фильтры из потока в корзине
+                if (salonFilters) salonFilters.style.display = 'none';
                 renderCartPage();
-            }
-        }
             }
         }
 
@@ -435,77 +430,104 @@
         if (menuCart) menuCart.onclick = () => switchScreen('cart');
 
         function calculateDelivery() {
-            const distance = parseInt(document.getElementById('delivery-country').value);
+            const countrySelect = document.getElementById('delivery-country');
+            if (!countrySelect) return;
+            const distance = parseInt(countrySelect.value) || 0;
             const finalCost = Math.round(distance * 1.5 + 200);
-            document.getElementById('delivery-cost').innerText = `$${finalCost.toLocaleString()}`;
+            const delCostEl = document.getElementById('delivery-cost');
+            if (delCostEl) delCostEl.innerText = `$${finalCost.toLocaleString()}`;
         }
 
         function openDetails(car) {
-            catalogScreen.classList.remove('active-screen');
-            detailsScreen.classList.add('active-screen');
+            if (catalogScreen) catalogScreen.classList.remove('active-screen');
             if (cartScreen) cartScreen.classList.remove('active-screen');
+            if (detailsScreen) detailsScreen.classList.add('active-screen');
             
-            document.getElementById('detail-img').src = `Car/${car.imgName}`;
-            document.getElementById('detail-title').innerText = car.name;
-            document.getElementById('detail-price').innerText = car.price;
-            document.getElementById('detail-desc').innerText = `Оригинальный ${car.name}. Полный пакет документов, идеальное состояние кузова и салона, не требует вложений. Готов к отправке автовозом.`;
+            const detailImg = document.getElementById('detail-img');
+            if (detailImg) detailImg.src = `Car/${car.imgName}`;
             
-            document.getElementById('spec-year').innerText = car.year;
-            document.getElementById('spec-drive').innerText = car.drive;
-            document.getElementById('spec-mileage').innerText = car.mileage;
-            document.getElementById('spec-transmission').innerText = car.transmission;
+            const detailTitle = document.getElementById('detail-title');
+            if (detailTitle) detailTitle.innerText = car.name;
+            
+            const detailPrice = document.getElementById('detail-price');
+            if (detailPrice) detailPrice.innerText = car.price;
+            
+            const detailDesc = document.getElementById('detail-desc');
+            if (detailDesc) detailDesc.innerText = `Оригинальный ${car.name}. Полный пакет документов, идеальное состояние кузова и салона, не требует вложений. Готов к отправке автовозом.`;
+            
+            const sYear = document.getElementById('spec-year'); if (sYear) sYear.innerText = car.year;
+            const sDrive = document.getElementById('spec-drive'); if (sDrive) sDrive.innerText = car.drive;
+            const sMileage = document.getElementById('spec-mileage'); if (sMileage) sMileage.innerText = car.mileage;
+            const sTrans = document.getElementById('spec-transmission'); if (sTrans) sTrans.innerText = car.transmission;
             
             calculateDelivery();
 
             const tbody = document.getElementById('offers-table-body');
-            tbody.innerHTML = `
-                <tr class="row-active"><td>Alexey Petrov</td><td>${car.mileage}</td><td>${car.transmission}</td><td style="font-weight:bold; color:var(--accent-green);">${car.price}</td></tr>
-                <tr><td>Dmitriy Sokolov</td><td>63 500 км</td><td>Автомат</td><td>$17 990</td></tr>
-            `;
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr class="row-active"><td>Alexey Petrov</td><td>${car.mileage}</td><td>${car.transmission}</td><td style="font-weight:bold; color:var(--accent-green);">${car.price}</td></tr>
+                    <tr><td>Dmitriy Sokolov</td><td>63 500 км</td><td>Автомат</td><td>$17 990</td></tr>
+                `;
+            }
         }
 
-        // Кнопка добавить в корзину
-        document.getElementById('action-buy-click').onclick = () => { 
-            const carName = document.getElementById('detail-title').innerText; 
-            const city = document.getElementById('delivery-city').value || 'выбранный город';
-            const countrySelect = document.getElementById('delivery-country');
-            const countryName = countrySelect.options[countrySelect.selectedIndex].getAttribute('data-name');
-            const distance = parseInt(countrySelect.value);
-            
-            const carPriceRaw = document.getElementById('detail-price').innerText;
-            const deliveryCostRaw = Math.round(distance * 1.5 + 200);
-            
-            originalDeliveryCost = deliveryCostRaw;
-            discountPercent = 0; 
-            
-            currentCart = {
-                name: carName,
-                price: parseInt(carPriceRaw.replace(/[^0-9]/g, '')),
-                deliveryPrice: deliveryCostRaw,
-                country: countryName,
-                city: city,
-                img: document.getElementById('detail-img').src
-            };
+        // Добавление в корзину
+        const actionBuyClick = document.getElementById('action-buy-click');
+        if (actionBuyClick) {
+            actionBuyClick.onclick = () => { 
+                const carNameEl = document.getElementById('detail-title');
+                const carName = carNameEl ? carNameEl.innerText : 'Автомобиль';
+                
+                const cityEl = document.getElementById('delivery-city');
+                const city = (cityEl && cityEl.value) ? cityEl.value : 'выбранный город';
+                
+                const countrySelect = document.getElementById('delivery-country');
+                const countryName = countrySelect ? countrySelect.options[countrySelect.selectedIndex].getAttribute('data-name') : 'Германия';
+                const distance = countrySelect ? parseInt(countrySelect.value) : 1000;
+                
+                const carPriceRawEl = document.getElementById('detail-price');
+                const carPriceRaw = carPriceRawEl ? carPriceRawEl.innerText : '0';
+                const deliveryCostRaw = Math.round(distance * 1.5 + 200);
+                
+                originalDeliveryCost = deliveryCostRaw;
+                discountPercent = 0; 
+                
+                const dImg = document.getElementById('detail-img');
+                currentCart = {
+                    name: carName,
+                    price: parseInt(carPriceRaw.replace(/[^0-9]/g, '')) || 0,
+                    deliveryPrice: deliveryCostRaw,
+                    country: countryName,
+                    city: city,
+                    img: dImg ? dImg.src : ''
+                };
 
-            const badge = document.getElementById('cart-badge');
-            if (badge) badge.style.display = 'inline-block';
+                const badge = document.getElementById('cart-badge');
+                if (badge) badge.style.display = 'inline-block';
 
-            document.getElementById('modal-car-name').innerHTML = `
-                Товар <strong>${carName}</strong> успешно добавлен в корзину!<br><br>
-                <span style="font-size: 13px; color: var(--text-muted);">
-                    Оформили доставку в: <strong>${countryName}, г. ${city}</strong>.<br>
-                    Перейдите в корзину, чтобы применить промокод и оплатить.
-                </span>
-            `; 
-            
-            document.getElementById('btn-close-modal').innerText = "Перейти в корзину";
-            document.getElementById('btn-close-modal').onclick = () => {
-                modal.style.display = 'none';
-                switchScreen('cart');
+                const modalCarName = document.getElementById('modal-car-name');
+                if (modalCarName) {
+                    modalCarName.innerHTML = `
+                        Товар <strong>${carName}</strong> успешно добавлен в корзину!<br><br>
+                        <span style="font-size: 13px; color: var(--text-muted);">
+                            Оформили доставку в: <strong>${countryName}, г. ${city}</strong>.<br>
+                            Перейдите в корзину, чтобы применить промокод и оплатить.
+                        </span>
+                    `;
+                }
+
+                const btnCloseModal = document.getElementById('btn-close-modal');
+                if (btnCloseModal) {
+                    btnCloseModal.innerText = "Перейти в корзину";
+                    btnCloseModal.onclick = () => {
+                        if (modal) modal.style.display = 'none';
+                        switchScreen('cart');
+                    };
+                }
+                
+                if (modal) modal.style.display = 'flex'; 
             };
-            
-            modal.style.display = 'flex'; 
-        };
+        }
 
         function renderCartPage() {
             const emptyMsg = document.getElementById('cart-empty-msg');
@@ -523,15 +545,15 @@
             if (itemRow) itemRow.style.display = 'flex';
             if (checkoutBlock) checkoutBlock.style.display = 'flex';
 
-            document.getElementById('cart-item-img').src = currentCart.img;
-            document.getElementById('cart-item-name').innerText = currentCart.name;
-            document.getElementById('cart-item-delivery-info').innerText = `Доставка из Берлина в ${currentCart.country}, г. ${currentCart.city}`;
-            document.getElementById('cart-item-price').innerText = `$${currentCart.price.toLocaleString()}`;
+            const cImg = document.getElementById('cart-item-img'); if (cImg) cImg.src = currentCart.img;
+            const cName = document.getElementById('cart-item-name'); if (cName) cName.innerText = currentCart.name;
+            const cInfo = document.getElementById('cart-item-delivery-info'); if (cInfo) cInfo.innerText = `Доставка из Берлина в ${currentCart.country}, г. ${currentCart.city}`;
+            const cPrice = document.getElementById('cart-item-price'); if (cPrice) cPrice.innerText = `$${currentCart.price.toLocaleString()}`;
             
             if (discountPercent === 0) {
-                document.getElementById('promo-input-container').style.display = 'flex';
-                document.getElementById('promo-success-msg').style.display = 'none';
-                document.getElementById('promo-field').value = '';
+                const pCont = document.getElementById('promo-input-container'); if (pCont) pCont.style.display = 'flex';
+                const pMsg = document.getElementById('promo-success-msg'); if (pMsg) pMsg.style.display = 'none';
+                const pField = document.getElementById('promo-field'); if (pField) pField.value = '';
             }
 
             updateCartTotals();
@@ -544,7 +566,10 @@
         }
 
         function applyPromoCode() {
-            const promoValue = document.getElementById('promo-field').value.trim();
+            const pField = document.getElementById('promo-field');
+            if (!pField) return;
+            const promoValue = pField.value.trim();
+            
             if (promoValue === 'ветер') {
                 discountPercent = 5;
             } else if (promoValue === 'Ветер') {
@@ -557,84 +582,82 @@
             const newDeliveryPrice = Math.round(originalDeliveryCost * (1 - discountPercent / 100));
             currentCart.deliveryPrice = newDeliveryPrice;
 
-            document.getElementById('promo-input-container').style.display = 'none';
+            const pCont = document.getElementById('promo-input-container'); if (pCont) pCont.style.display = 'none';
             
             const successMsg = document.getElementById('promo-success-msg');
             const textStatus = document.getElementById('promo-text-status');
             
-            textStatus.innerHTML = `Промокод введен! Ваша скидка на доставку с <strong>$${originalDeliveryCost}</strong> до <strong>$${newDeliveryPrice}</strong> составляет <strong>${discountPercent}%</strong>.`;
-            successMsg.style.display = 'flex';
+            if (textStatus) textStatus.innerHTML = `Промокод введен! Ваша скидка на доставку с <strong>$${originalDeliveryCost}</strong> до <strong>$${newDeliveryPrice}</strong> составляет <strong>${discountPercent}%</strong>.`;
+            if (successMsg) successMsg.style.display = 'flex';
 
             updateCartTotals();
         }
 
         function updateCartTotals() {
             if (!currentCart) return;
-            document.getElementById('cart-item-del-price').innerText = `Доставка: $${currentCart.deliveryPrice.toLocaleString()}`;
+            const cDelPrice = document.getElementById('cart-item-del-price'); if (cDelPrice) cDelPrice.innerText = `Доставка: $${currentCart.deliveryPrice.toLocaleString()}`;
             const total = currentCart.price + currentCart.deliveryPrice;
-            document.getElementById('final-total-price').innerText = `$${total.toLocaleString()}`;
+            const fTotal = document.getElementById('final-total-price'); if (fTotal) fTotal.innerText = `$${total.toLocaleString()}`;
         }
 
         function confirmFinalOrder() {
             const activePayEl = document.querySelector('#cart-checkout-block .active-pay');
             const activePaymentMethod = activePayEl ? activePayEl.innerText.trim() : 'выбранную систему';
+            const fTotal = document.getElementById('final-total-price');
+            const finalPriceText = fTotal ? fTotal.innerText : '$0';
             
-            document.getElementById('modal-car-name').innerHTML = `
-                Успешно! С Вашего счета списано <strong>${document.getElementById('final-total-price').innerText}</strong> через <strong>${activePaymentMethod}</strong>.<br><br>
-                Автомобиль передается в логистический отдел Берлина для отправки.
-            `;
+            const modalCarName = document.getElementById('modal-car-name');
+            if (modalCarName) {
+                modalCarName.innerHTML = `
+                    Успешно! С Вашего счета списано <strong>${finalPriceText}</strong> через <strong>${activePaymentMethod}</strong>.<br><br>
+                    Автомобиль передается в логистический отдел Берлина для отправки.
+                `;
+            }
             
-            document.getElementById('btn-close-modal').innerText = "Отлично";
-            document.getElementById('btn-close-modal').onclick = () => {
-                modal.style.display = 'none';
-                currentCart = null; 
-                const badge = document.getElementById('cart-badge');
-                if (badge) badge.style.display = 'none';
-                switchScreen('catalog');
-            };
+            const btnCloseModal = document.getElementById('btn-close-modal');
+            if (btnCloseModal) {
+                btnCloseModal.innerText = "Отлично";
+                btnCloseModal.onclick = () => {
+                    if (modal) modal.style.display = 'none';
+                    currentCart = null; 
+                    const badge = document.getElementById('cart-badge');
+                    if (badge) badge.style.display = 'none';
+                    switchScreen('catalog');
+                };
+            }
             
-            modal.style.display = 'flex';
+            if (modal) modal.style.display = 'flex';
         }
 
-       // Безопасное назначение событий
-        const deliveryCountry = document.getElementById('delivery-country');
-        if (deliveryCountry) deliveryCountry.onchange = calculateDelivery;
-
-        const deliveryCity = document.getElementById('delivery-city');
-        if (deliveryCity) deliveryCity.oninput = calculateDelivery;
-
-        const btnBackToCatalog = document.getElementById('btn-back-to-catalog');
-        if (btnBackToCatalog) btnBackToCatalog.onclick = () => switchScreen('catalog');
+        // Автопривязка триггеров
+        const delCountry = document.getElementById('delivery-country'); if (delCountry) delCountry.onchange = calculateDelivery;
+        const delCity = document.getElementById('delivery-city'); if (delCity) delCity.oninput = calculateDelivery;
+        const btnBackCatalog = document.getElementById('btn-back-to-catalog'); if (btnBackCatalog) btnBackCatalog.onclick = () => switchScreen('catalog');
 
         const filterAllBtn = document.getElementById('filter-all-btn');
         if (filterAllBtn) {
             filterAllBtn.onclick = function() { 
-                const fCars = document.getElementById('filter-cars-btn');
-                if (fCars) fCars.classList.remove('active'); 
-                this.classList.add('active'); 
-                selectedType = 'all'; 
-                renderCatalog();
+                const fCars = document.getElementById('filter-cars-btn'); if (fCars) fCars.classList.remove('active'); 
+                this.classList.add('active'); selectedType = 'all'; renderCatalog();
             };
         }
 
         const filterCarsBtn = document.getElementById('filter-cars-btn');
         if (filterCarsBtn) {
             filterCarsBtn.onclick = function() { 
-                const fAll = document.getElementById('filter-all-btn');
-                if (fAll) fAll.classList.remove('active'); 
-                this.classList.add('active'); 
-                selectedType = 'passenger'; 
-                renderCatalog();
+                const fAll = document.getElementById('filter-all-btn'); if (fAll) fAll.classList.remove('active'); 
+                this.classList.add('active'); selectedType = 'passenger'; renderCatalog();
             };
         }
 
-        const applyFiltersBtn = document.getElementById('apply-filters-btn');
-        if (applyFiltersBtn) applyFiltersBtn.onclick = () => { renderCatalog(); };
-
-        const btnCloseModal = document.getElementById('btn-close-modal');
-        if (btnCloseModal) btnCloseModal.onclick = () => { modal.style.display = 'none'; };
+        const applyFiltersBtn = document.getElementById('apply-filters-btn'); if (applyFiltersBtn) applyFiltersBtn.onclick = () => { renderCatalog(); };
+        const btnCloseM = document.getElementById('btn-close-modal'); if (btnCloseM) btnCloseM.onclick = () => { if (modal) modal.style.display = 'none'; };
         
-        // Запуск
+        // Живой поиск
+        const searchInput = document.getElementById('search-input') || document.querySelector('.search-input');
+        if (searchInput) { searchInput.oninput = () => renderCatalog(); }
+
+        // Стартовый запуск каталога
         renderCatalog();
     </script>
 </body>
