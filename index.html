@@ -141,7 +141,6 @@
                     <div class="balance-cash">$1 559 <i class="fa-solid fa-briefcase" style="margin-left: 5px;"></i></div>
                     <div class="balance-total">$2 248 840 🖥️</div>
                 </div>
-                <button class="btn-create">+ Создать</button>
             </div>
         </div>
 
@@ -396,6 +395,7 @@
         }
 
         // Переключение вкладок
+        // Переключение вкладок с фиксом верхнего меню
         function switchScreen(target) {
             catalogScreen.classList.remove('active-screen');
             detailsScreen.classList.remove('active-screen');
@@ -403,15 +403,20 @@
             if (menuTransport) menuTransport.classList.remove('active');
             if (menuCart) menuCart.classList.remove('active');
             
+            // Находим блоки фильтров автосалона, чтобы они не ломали верстку в корзине
+            const salonFilters = document.querySelector('.header-filters'); 
+            
             if (target === 'catalog') {
                 catalogScreen.classList.add('active-screen');
-                if (menuTransport) menuTransport.classList.add('active');
-                if (headerFilters) { headerFilters.style.opacity = '1'; headerFilters.style.pointerEvents = 'auto'; }
+                if (menuTransport) menuTransport.add('active');
+                if (salonFilters) salonFilters.style.display = 'flex'; // Показываем фильтры в каталоге
             } else if (target === 'cart') {
                 cartScreen.classList.add('active-screen');
                 if (menuCart) menuCart.classList.add('active');
-                if (headerFilters) { headerFilters.style.opacity = '0'; headerFilters.style.pointerEvents = 'none'; }
+                if (salonFilters) salonFilters.style.display = 'none'; // Полностью убираем фильтры из потока в корзине
                 renderCartPage();
+            }
+        }
             }
         }
 
