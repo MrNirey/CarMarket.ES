@@ -347,11 +347,25 @@
         document.getElementById('filter-cars-btn').onclick = function() { document.getElementById('filter-all-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'passenger'; renderCatalog();};
         document.getElementById('apply-filters-btn').onclick = () => { renderCatalog(); };
         
+     // ОБНОВЛЕННАЯ ЛОГИКА ОКНА ПОКУПКИ (ДОБАВЛЕНИЕ В КОРЗИНУ)
         document.getElementById('action-buy-click').onclick = () => { 
             const carName = document.getElementById('detail-title').innerText; 
             const city = document.getElementById('delivery-city').value || 'выбранный город';
             const country = document.getElementById('delivery-country').options[document.getElementById('delivery-country').selectedIndex].getAttribute('data-name');
-            document.getElementById('modal-car-name').innerText = `Вы успешно оформили заказ на ${carName} с доставкой в ${country} (${city})!`; 
+            
+            // Красивый текст для окна корзины
+            document.getElementById('modal-car-name').innerHTML = `
+                Товар <strong>${carName}</strong> успешно добавлен в вашу корзину!<br><br>
+                <span style="font-size: 13px; color: var(--text-muted);">
+                    Оформлена доставка в: <strong>${country}, г. ${city}</strong>.<br>
+                    Для завершения платежа и подтверждения заказа перейдите в корзину.
+                </span>
+            `; 
+            
+            // Меняем текст на кнопке закрытия в самом окне, чтобы она вела дальше
+            document.getElementById('btn-close-modal').innerText = "Перейти в корзину";
+            
+            // Показываем окно
             modal.style.display = 'flex'; 
         };
         
