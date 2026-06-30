@@ -416,9 +416,195 @@
         
      // ОБНОВЛЕННАЯ ЛОГИКА ОКНА ПОКУПКИ (ДОБАВЛЕНИЕ В КОРЗИНУ)
         document.getElementById('action-buy-click').onclick = () => { 
+            // Глобальный объект для хранения данных о текущей корзине
+        let currentCart = null;
+        let originalDeliveryCost = 0;
+        let discountPercent = 0;
+
+        // Навигация по страницам
+        const cartScreen = document.getElementById('screen-cart');
+        const menuTransport = document.getElementById('menu-transport-btn');
+        const menuCart = document.getElementById('menu-cart-btn');
+        const headerFilters = document.querySelector('.header-filters');
+
+        function switchScreen(target) {
+            catalogScreen.classList.remove('active-screen');
+            detailsScreen.classList.remove('active-screen');
+            cartScreen.classList.remove('active-screen');
+            menuTransport.classList.remove('active');
+            menuCart.classList.remove('active');
+            
+            if (target === 'catalog') {
+                catalogScreen.classList.add('active-screen');
+                menuTransport.classList.add('active');
+                headerFilters.style.opacity = '1';
+                headerFilters.style.pointerEvents = 'auto';
+            } else if (target === 'cart') {
+                cartScreen.classList.add('active-screen');
+                menuCart.classList.add('active');
+                headerFilters.style.opacity = '0'; // Скрываем фильтры автосалона на странице корзины
+                headerFilters.style.pointerEvents = 'none';
+                renderCartPage();
+            }
+        }
+
+        menuTransport.onclick = () => switchScreen('catalog');
+        menuCart.onclick = () => switchScreen('cart');
+
+        // Логика кнопки "Купить сейчас" на странице деталей
+        document.getElementById('action-buy-click').onclick = () => { 
             const carName = document.getElementById('detail-title').innerText; 
             const city = document.getElementById('delivery-city').value || 'выбранный город';
-            const country = document.getElementById('delivery-country').options[document.getElementById('delivery-country').selectedIndex].getAttribute('data-name');
+            const countrySelect = document.getElementById('delivery-country');
+            const countryName = countrySelect.options[countrySelect.selectedIndex].getAttribute('data-name');
+            const distance = parseInt(countrySelect.value);
+            
+            const carPriceRaw = document.getElementById('detail-price').innerText;
+            const deliveryCostRaw = Math.round(distance * 1.5 + 200);
+            
+            // Записываем данные в корзину
+            originalDeliveryCost = deliveryCostRaw;
+            discountPercent = 0; // Сбрасываем промокод при новой покупке
+            
+            currentCart = {
+                name: carName,
+                price: parseInt(carPriceRaw.replace(/[^0-9]/g, '')),
+                deliveryPrice: deliveryCostRaw,
+                country: countryName,
+                city: city,
+                img: document.getElementById('detail-img').src
+            };
+
+            // Обновляем бейдж на иконке корзины
+            document.getElementById('cart-badge').style.display = 'inline-block';
+
+            // Красивый текст для модального окна добавления
+            document.getElementById('modal-car-name').innerHTML = `
+                Товар <strong>${carName}</strong> успешно добавлен в корзину!<br><br>
+                <span style="font-size: 13px; color: var(--text-muted);">
+                    Оформили доставку в: <strong>${countryName}, г. ${city}</strong>.<br>
+                    Перейдите в корзину, чтобы применить промокод и оплатить.
+                </span>
+            `; 
+            
+            document.getElementById('btn-close-modal').innerText = "Перейти в корзину";
+            // При нажатии на кнопку модалки — сразу кидаем в корзину
+            document.getElementById('btn-close-modal').onclick = () => {
+                modal.style.display = 'none';
+                switchScreen('cart');
+            };
+            
+            modal.style.display = 'flex'; 
+        };
+
+        // Отрисовка страницы корзины
+        function renderCartPage() {
+            const emptyMsg = document.getElementById('cart-empty-msg');
+            const itemRow = document.getElementById('cart-item-row');
+            const checkoutBlock = document.getElementById('cart-checkout-block');
+            
+            if (!currentCart) {
+                emptyMsg.style.display = 'block';
+                itemRow.style.display = 'none';
+                checkoutBlock.style.display = 'none';
+                return;
+            }
+
+            emptyMsg.style.display = 'none';
+            itemRow.style.display = 'flex';
+            checkoutBlock.style.display = 'flex';
+
+            document.getElementById('cart-item-img').src = currentCart.img;
+            document.getElementById('cart-item-name').innerText = currentCart.name;
+            document.getElementById('cart-item-delivery-info').innerText = `Доставка из Берлина в ${currentCart.country}, г. ${currentCart.city}`;
+            document.getElementById('cart-item-price').innerText = `$${currentCart.price.toLocaleString()}`;
+            
+            // Возвращаем дефолтное состояние строки промокода, если он еще не введен
+            if (discountPercent === 0) {
+                document.getElementById('promo-input-container').style.display = 'flex';
+                document.getElementById('promo-success-msg').style.display = 'none';
+                document.getElementById('promo-field').value = '';
+            }
+
+            updateCartTotals();
+        }
+
+        // Выбор способа оплаты
+        function selectPay(element) {
+            const badges = document.querySelectorAll('#cart-checkout-block .pay-badge');
+            badges.forEach(b => b.classList.remove('active-pay'));
+            element.classList.add('active-pay');
+        }
+
+        // Проверка и применение промокода "Ветер" / "ветер"
+        function applyPromoCode() {
+            const promoValue = document.getElementById('promo-field').value.trim();
+            
+            if (promoValue === 'ветер') {
+                discountPercent = 5;
+            } else if (promoValue === 'Ветер') {
+                discountPercent = 10;
+            } else {
+                alert('Неверный промокод! Попробуйте еще раз.');
+                return;
+            }
+
+            const newDeliveryPrice = Math.round(originalDeliveryCost * (1 - discountPercent / 100));
+            currentCart.deliveryPrice = newDeliveryPrice;
+
+            // Скрываем строку ввода, делаем её нерабочей
+            document.getElementById('promo-input-container').style.display = 'none';
+            
+            // Показываем галочку и отчет о скидке
+            const successMsg = document.getElementById('promo-success-msg');
+            const textStatus = document.getElementById('promo-text-status');
+            
+            textStatus.innerHTML = `Промокод введен! Ваша скидка на доставку с <strong>$${originalDeliveryCost}</strong> до <strong>$${newDeliveryPrice}</strong> составляет <strong>${discountPercent}%</strong>.`;
+            successMsg.style.display = 'flex';
+
+            updateCartTotals();
+        }
+
+        // Пересчет финальной стоимости
+        function updateCartTotals() {
+            if (!currentCart) return;
+            document.getElementById('cart-item-del-price').innerText = `Доставка: $${currentCart.deliveryPrice.toLocaleString()}`;
+            
+            const total = currentCart.price + currentCart.deliveryPrice;
+            document.getElementById('final-total-price').innerText = `$${total.toLocaleString()}`;
+        }
+
+        // Финальное оформление заказа
+        function confirmFinalOrder() {
+            const activePaymentMethod = document.querySelector('#cart-checkout-block .active-pay').innerText.trim();
+            
+            document.getElementById('modal-car-name').innerHTML = `
+                Успешно! С Вашего счета списано <strong>${document.getElementById('final-total-price').innerText}</strong> через <strong>${activePaymentMethod}</strong>.<br><br>
+                Автомобиль передается в логистический отдел Берлина для отправки.
+            `;
+            
+            document.getElementById('btn-close-modal').innerText = "Отлично";
+            document.getElementById('btn-close-modal').onclick = () => {
+                modal.style.display = 'none';
+                currentCart = null; // Очищаем корзину после покупки
+                document.getElementById('cart-badge').style.display = 'none';
+                switchScreen('catalog');
+            };
+            
+            modal.style.display = 'flex';
+        }
+
+        // Стандартные настройки запуска
+        document.getElementById('btn-back-to-catalog').onclick = () => { detailsScreen.classList.remove('active-screen'); catalogScreen.classList.add('active-screen'); };
+        document.getElementById('filter-all-btn').onclick = function() { document.getElementById('filter-cars-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'all'; renderCatalog();};
+        document.getElementById('filter-cars-btn').onclick = function() { document.getElementById('filter-all-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'passenger'; renderCatalog();};
+        document.getElementById('apply-filters-btn').onclick = () => { renderCatalog(); };
+        document.getElementById('btn-close-modal').onclick = () => { modal.style.display = 'none'; };
+        
+        renderCatalog();
+    </script>
+</body>
+</html>
             
             // Красивый текст для окна корзины
             document.getElementById('modal-car-name').innerHTML = `
