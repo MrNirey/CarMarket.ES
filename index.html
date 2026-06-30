@@ -328,35 +328,49 @@
 
     <script>
         // База данных машин
+        // 1. РАСШИРЕННАЯ БАЗА ДАННЫХ МАШИН ПО АВТОСАЛОНАМ (СЕГМЕНТАМ)
         const carsData = [
-            { id: 1, name: 'Volkswagen Golf', price: '$18 500', type: 'passenger', qty: 18, year: '2020', drive: 'Передний', mileage: '57 000 км', transmission: 'Автомат', imgName: 'volkswagen_golf.png' },
-            { id: 2, name: 'Skoda Octavia', price: '$20 900', type: 'passenger', qty: 16, year: '2021', drive: 'Передний', mileage: '42 000 км', transmission: 'Автомат', imgName: 'skoda_octavia.png' },
-            { id: 3, name: 'BMW 3 Series', price: '$32 900', type: 'passenger', qty: 21, year: '2019', drive: 'Задний', mileage: '68 000 км', transmission: 'Автомат', imgName: 'bmw_3_series.png' },
-            { id: 4, name: 'Audi A4', price: '$28 900', type: 'passenger', qty: 14, year: '2020', drive: 'Передний', mileage: '61 000 км', transmission: 'Автомат', imgName: 'audi_a4.png' },
-            { id: 5, name: 'Mercedes-Benz C-Class', price: '$34 900', type: 'passenger', qty: 12, year: '2019', drive: 'Задний', mileage: '54 000 км', transmission: 'Автомат', imgName: 'mercedes-benz_c-class.png' },
-            { id: 6, name: 'Toyota Corolla', price: '$17 900', type: 'passenger', qty: 20, year: '2021', drive: 'Передний', mileage: '35 000 км', transmission: 'Вариатор', imgName: 'toyota_corolla.png' },
-            { id: 7, name: 'Honda Civic', price: '$19 900', type: 'passenger', qty: 15, year: '2020', drive: 'Передний', mileage: '49 000 км', transmission: 'Автомат', imgName: 'honda_civic.png' },
-            { id: 8, name: 'Ford Focus', price: '$16 900', type: 'passenger', qty: 17, year: '2018', drive: 'Передний', mileage: '82 000 км', transmission: 'Робот', imgName: 'ford_focus.png' },
-            { id: 9, name: 'Peugeot 308', price: '$18 300', type: 'passenger', qty: 13, year: '2020', drive: 'Передний', mileage: '41 000 км', transmission: 'Автомат', imgName: 'peugeot_308.png' },
-            { id: 10, name: 'Renault Megane', price: '$17 200', type: 'passenger', qty: 11, year: '2019', drive: 'Передний', mileage: '73 000 км', transmission: 'Механика', imgName: 'renault_megane.png' },
-            { id: 11, name: 'Nissan Qashqai', price: '$22 900', type: 'passenger', qty: 13, year: '2020', drive: 'Передний', mileage: '45 000 км', transmission: 'Вариатор', imgName: 'nissan_qashqai.png' },
-            { id: 12, name: 'Volkswagen Tiguan', price: '$27 900', type: 'passenger', qty: 15, year: '2021', drive: 'Полный', mileage: '33 000 км', transmission: 'Робот', imgName: 'volkswagen_tiguan.png' },
-            { id: 13, name: 'Volvo XC60', price: '$39 900', type: 'passenger', qty: 10, year: '2020', drive: 'Полный', mileage: '59 000 км', transmission: 'Автомат', imgName: 'volvo_xc60.png' },
-            { id: 14, name: 'Audi Q5', price: '$37 900', type: 'passenger', qty: 9, year: '2019', drive: 'Полный', mileage: '66 000 км', transmission: 'Робот', imgName: 'audi_q5.png' },
-            { id: 15, name: 'BMW X3', price: '$41 900', type: 'passenger', qty: 8, year: '2020', drive: 'Полный', mileage: '51 000 км', transmission: 'Автомат', imgName: 'bmw_x3.png' },
-            { id: 16, name: 'Tesla Model 3', price: '$35 900', type: 'passenger', qty: 7, year: '2021', drive: 'Полный', mileage: '28 000 км', transmission: 'Редуктор', imgName: 'tesla_model_3.png' },
-            { id: 17, name: 'Volkswagen ID.4', price: '$32 500', type: 'passenger', qty: 6, year: '2022', drive: 'Задний', mileage: '19 000 км', transmission: 'Редуктор', imgName: 'volkswagen_id.4.png' },
-            { id: 18, name: 'Peugeot 2008', price: '$19 800', type: 'passenger', qty: 9, year: '2021', drive: 'Передний', mileage: '31 000 км', transmission: 'Автомат', imgName: 'peugeot_2008.png' },
-            { id: 19, name: 'Kia Sportage', price: '$22 400', type: 'passenger', qty: 11, year: '2020', drive: 'Передний', mileage: '54 000 км', transmission: 'Автомат', imgName: 'kia_sportage.png' },
-            { id: 20, name: 'Hyundai Tucson', price: '$23 900', type: 'passenger', qty: 10, year: '2021', drive: 'Передний', mileage: '41 000 км', transmission: 'Автомат', imgName: 'hyundai_tucson.png' }
+            // Салон: AutoZentrum Berlin (Германия) - Немецкая классика и средний класс
+            { id: 1, salon: 'berlin', brand: 'Volkswagen', name: 'Volkswagen Golf', price: '$18 500', priceRaw: 18500, type: 'passenger', qty: 18, year: '2020', drive: 'Передний', mileage: '57 000 км', mileageRaw: 57000, transmission: 'Автомат', imgName: 'volkswagen_golf.png' },
+            { id: 2, salon: 'berlin', brand: 'Skoda', name: 'Skoda Octavia', price: '$20 900', priceRaw: 20900, type: 'passenger', qty: 16, year: '2021', drive: 'Передний', mileage: '42 000 км', mileageRaw: 42000, transmission: 'Автомат', imgName: 'skoda_octavia.png' },
+            { id: 3, salon: 'berlin', brand: 'BMW', name: 'BMW 3 Series', price: '$32 900', priceRaw: 32900, type: 'passenger', qty: 21, year: '2019', drive: 'Задний', mileage: '68 000 км', mileageRaw: 68000, transmission: 'Автомат', imgName: 'bmw_3_series.png' },
+            { id: 4, salon: 'berlin', brand: 'Audi', name: 'Audi A4', price: '$28 900', priceRaw: 28900, type: 'passenger', qty: 14, year: '2020', drive: 'Передний', mileage: '61 000 км', mileageRaw: 61000, transmission: 'Автомат', imgName: 'audi_a4.png' },
+            { id: 12, salon: 'berlin', brand: 'Volkswagen', name: 'Volkswagen Tiguan', price: '$27 900', priceRaw: 27900, type: 'passenger', qty: 15, year: '2021', drive: 'Полный', mileage: '33 000 км', mileageRaw: 33000, transmission: 'Робот', imgName: 'volkswagen_tiguan.png' },
+
+            // Салон: Iberia Motors (Мадрид) - Доступные городские авто и хэтчбеки
+            { id: 6, salon: 'madrid', brand: 'Toyota', name: 'Toyota Corolla', price: '$17 900', priceRaw: 17900, type: 'passenger', qty: 20, year: '2021', drive: 'Передний', mileage: '35 000 км', mileageRaw: 35000, transmission: 'Вариатор', imgName: 'toyota_corolla.png' },
+            { id: 7, salon: 'madrid', brand: 'Honda', name: 'Honda Civic', price: '$19 900', priceRaw: 19900, type: 'passenger', qty: 15, year: '2020', drive: 'Передний', mileage: '49 000 км', mileageRaw: 49000, transmission: 'Автомат', imgName: 'honda_civic.png' },
+            { id: 8, salon: 'madrid', brand: 'Ford', name: 'Ford Focus', price: '$16 900', priceRaw: 16900, type: 'passenger', qty: 17, year: '2018', drive: 'Передний', mileage: '82 000 км', mileageRaw: 82000, transmission: 'Робот', imgName: 'ford_focus.png' },
+            { id: 9, salon: 'madrid', brand: 'Peugeot', name: 'Peugeot 308', price: '$18 300', priceRaw: 18300, type: 'passenger', qty: 13, year: '2020', drive: 'Передний', mileage: '41 000 км', mileageRaw: 41000, transmission: 'Автомат', imgName: 'peugeot_308.png' },
+            { id: 18, salon: 'madrid', brand: 'Peugeot', name: 'Peugeot 2008', price: '$19 800', priceRaw: 19800, type: 'passenger', qty: 9, year: '2021', drive: 'Передний', mileage: '31 000 км', mileageRaw: 31000, transmission: 'Автомат', imgName: 'peugeot_2008.png' },
+
+            // Салон: Silesia Auto Hub (Варшава) - Практичные кроссоверы и семейные модели
+            { id: 10, salon: 'warsaw', brand: 'Renault', name: 'Renault Megane', price: '$17 200', priceRaw: 17200, type: 'passenger', qty: 11, year: '2019', drive: 'Передний', mileage: '73 000 км', mileageRaw: 73000, transmission: 'Механика', imgName: 'renault_megane.png' },
+            { id: 11, salon: 'warsaw', brand: 'Nissan', name: 'Nissan Qashqai', price: '$22 900', priceRaw: 22900, type: 'passenger', qty: 13, year: '2020', drive: 'Передний', mileage: '45 000 км', mileageRaw: 45000, transmission: 'Вариатор', imgName: 'nissan_qashqai.png' },
+            { id: 19, salon: 'warsaw', brand: 'Kia', name: 'Kia Sportage', price: '$22 400', priceRaw: 22400, type: 'passenger', qty: 11, year: '2020', drive: 'Передний', mileage: '54 000 км', mileageRaw: 54000, transmission: 'Автомат', imgName: 'kia_sportage.png' },
+            { id: 20, salon: 'warsaw', brand: 'Hyundai', name: 'Hyundai Tucson', price: '$23 900', priceRaw: 23900, type: 'passenger', qty: 10, year: '2021', drive: 'Передний', mileage: '41 000 км', mileageRaw: 41000, transmission: 'Автомат', imgName: 'hyundai_tucson.png' },
+            { id: 2, salon: 'warsaw', brand: 'Skoda', name: 'Skoda Octavia', price: '$20 900', priceRaw: 20900, type: 'passenger', qty: 5, year: '2021', drive: 'Передний', mileage: '90 000 км', mileageRaw: 90000, transmission: 'Автомат', imgName: 'skoda_octavia.png' },
+
+            // Салон: Roman Luxury & Electro (Рим) - Премиум сегмент и электромобили
+            { id: 5, salon: 'rome', brand: 'Mercedes-Benz', name: 'Mercedes-Benz C-Class', price: '$34 900', priceRaw: 34900, type: 'passenger', qty: 12, year: '2019', drive: 'Задний', mileage: '54 000 км', mileageRaw: 54000, transmission: 'Автомат', imgName: 'mercedes-benz_c-class.png' },
+            { id: 13, salon: 'rome', brand: 'Volvo', name: 'Volvo XC60', price: '$39 900', priceRaw: 39900, type: 'passenger', qty: 10, year: '2020', drive: 'Полный', mileage: '59 000 км', mileageRaw: 59000, transmission: 'Автомат', imgName: 'volvo_xc60.png' },
+            { id: 14, salon: 'rome', brand: 'Audi', name: 'Audi Q5', price: '$37 900', priceRaw: 37900, type: 'passenger', qty: 9, year: '2019', drive: 'Полный', mileage: '66 000 км', mileageRaw: 66000, transmission: 'Робот', imgName: 'audi_q5.png' },
+            { id: 15, salon: 'rome', brand: 'BMW', name: 'BMW X3', price: '$41 900', priceRaw: 41900, type: 'passenger', qty: 8, year: '2020', drive: 'Полный', mileage: '51 000 км', mileageRaw: 51000, transmission: 'Автомат', imgName: 'bmw_x3.png' },
+            { id: 16, salon: 'rome', brand: 'Tesla', name: 'Tesla Model 3', price: '$35 900', priceRaw: 35900, type: 'passenger', qty: 7, year: '2021', drive: 'Полный', mileage: '28 000 км', mileageRaw: 28000, transmission: 'Редуктор', imgName: 'tesla_model_3.png' },
+            { id: 17, salon: 'rome', brand: 'Volkswagen', name: 'Volkswagen ID.4', price: '$32 500', priceRaw: 32500, type: 'passenger', qty: 6, year: '2022', drive: 'Задний', mileage: '19 000 км', mileageRaw: 19000, transmission: 'Редуктор', imgName: 'volkswagen_id.4.png' }
         ];
 
+        // Глобальные переменные фильтрации
+        let selectedSalon = 'all';
+        let selectedModel = 'all';
+        let selectedSort = 'popular';
         let selectedType = 'all';
+        
         let currentCart = null;
         let originalDeliveryCost = 0;
         let discountPercent = 0;
 
-        // Поиск элементов с поддержкой разных названий классов/ID
+        // Поиск DOM-элементов
         const catalogScreen = document.getElementById('screen-catalog') || document.querySelector('.screen');
         const detailsScreen = document.getElementById('screen-details');
         const cartScreen = document.getElementById('screen-cart');
@@ -366,7 +380,67 @@
         const menuTransport = document.getElementById('menu-transport-btn');
         const menuCart = document.getElementById('menu-cart-btn');
 
-        // Улучшенный безопасный рендеринг каталога
+        // Динамические выпадающие списки (Автосалоны, Марки, Модели)
+        const salonSelect = document.getElementById('salon-select') || document.querySelector('[select-salon]') || document.getElementsByTagName('select')[0];
+        const transportSelect = document.getElementById('transport-select') || document.querySelector('[select-transport]') || document.getElementsByTagName('select')[1];
+        const sortSelect = document.getElementById('sort-select') || document.querySelector('[select-sort]') || document.getElementsByTagName('select')[2];
+
+        // 2. ИНИЦИАЛИЗАЦИЯ И НАПОЛНЕНИЕ СЕЛЕКТОРОВ СЕТКИ
+        function initSelectors() {
+            // Настройка автосалонов
+            if (salonSelect) {
+                salonSelect.innerHTML = `
+                    <option value="all">Все автосалоны (Вся Европа)</option>
+                    <option value="berlin">AutoZentrum Berlin (Берлин)</option>
+                    <option value="madrid">Iberia Motors (Мадрид)</option>
+                    <option value="warsaw">Silesia Auto Hub (Варшава)</option>
+                    <option value="rome">Roman Luxury & Electro (Рим)</option>
+                `;
+                salonSelect.onchange = (e) => {
+                    selectedSalon = e.target.value;
+                    renderCatalog();
+                };
+            }
+
+            // Настройка группированного выбора транспорта по Маркам и Моделям
+            if (transportSelect) {
+                // Извлекаем уникальные марки и модели из общей базы данных
+                const brands = [...new Set(carsData.map(c => c.brand))].sort();
+                
+                let optionsHTML = '<option value="all">Выбор транспорта (Все модели)</option>';
+                brands.forEach(brand => {
+                    optionsHTML += `<optgroup label="${brand}">`;
+                    const models = [...new Set(carsData.filter(c => c.brand === brand).map(c => c.name))].sort();
+                    models.forEach(model => {
+                        optionsHTML += `<option value="${model}">${model}</option>`;
+                    });
+                    optionsHTML += `</optgroup>`;
+                });
+                
+                transportSelect.innerHTML = optionsHTML;
+                transportSelect.onchange = (e) => {
+                    selectedModel = e.target.value;
+                    renderCatalog();
+                };
+            }
+
+            // Настройка сортировки
+            if (sortSelect) {
+                sortSelect.innerHTML = `
+                    <option value="popular">Сортировать: Популярные</option>
+                    <option value="price-asc">Цена: От дешевых к дорогим</option>
+                    <option value="price-desc">Цена: От дорогих к дешевым</option>
+                    <option value="year-desc">Год выпуска: Свежие</option>
+                    <option value="mileage-asc">Пробег: Минимальный</option>
+                `;
+                sortSelect.onchange = (e) => {
+                    selectedSort = e.target.value;
+                    renderCatalog();
+                };
+            }
+        }
+
+        // 3. СЛОЖНЫЙ И БЕЗОПАСНЫЙ РЕНДЕРИНГ КАТАЛОГА (ФИЛЬТРАЦИЯ + СОРТИРОВКА)
         function renderCatalog() {
             if (!carsGrid) return;
             carsGrid.innerHTML = '';
@@ -374,17 +448,34 @@
             const searchEl = document.getElementById('search-input') || document.querySelector('.search-input');
             const searchWord = searchEl ? searchEl.value.toLowerCase() : '';
             
-            const filteredCars = carsData.filter(car => {
+            // Фильтрация по всем активным параметрам
+            let filteredCars = carsData.filter(car => {
                 const matchesSearch = car.name.toLowerCase().includes(searchWord);
+                const matchesSalon = (selectedSalon === 'all') || (car.salon === selectedSalon);
+                const matchesModel = (selectedModel === 'all') || (car.name === selectedModel);
                 const matchesType = (selectedType === 'all') || (car.type === selectedType);
-                return matchesSearch && matchesType;
+                return matchesSearch && matchesSalon && matchesModel && matchesType;
             });
             
+            // Сортировка полученного списка
+            if (selectedSort === 'price-asc') {
+                filteredCars.sort((a, b) => a.priceRaw - b.priceRaw);
+            } else if (selectedSort === 'price-desc') {
+                filteredCars.sort((a, b) => b.priceRaw - a.priceRaw);
+            } else if (selectedSort === 'year-desc') {
+                filteredCars.sort((a, b) => parseInt(b.year) - parseInt(a.year));
+            } else if (selectedSort === 'mileage-asc') {
+                filteredCars.sort((a, b) => a.mileageRaw - b.mileageRaw);
+            } else if (selectedSort === 'popular') {
+                filteredCars.sort((a, b) => b.qty - a.qty); // Популярность по доступному количеству
+            }
+
             if (filteredCars.length === 0) {
-                carsGrid.innerHTML = '<div style="padding: 35px; color: var(--text-muted); text-align: center; width: 100%;">Автомобили не найдены</div>';
+                carsGrid.innerHTML = '<div style="padding: 45px; color: var(--text-muted); text-align: center; width: 100%;">Автомобили под заданные параметры не найдены</div>';
                 return;
             }
 
+            // Отрисовка квадратных карточек
             filteredCars.forEach(car => {
                 const card = document.createElement('div');
                 card.className = 'car-card';
@@ -404,7 +495,7 @@
             });
         }
 
-        // Переключение экранов
+        // 4. ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ЭКРАНОВ СТРАНИЦЫ
         function switchScreen(target) {
             if (catalogScreen) catalogScreen.classList.remove('active-screen');
             if (detailsScreen) detailsScreen.classList.remove('active-screen');
@@ -471,7 +562,7 @@
             }
         }
 
-        // Добавление в корзину
+        // Блок работы с корзиной
         const actionBuyClick = document.getElementById('action-buy-click');
         if (actionBuyClick) {
             actionBuyClick.onclick = () => { 
@@ -570,20 +661,14 @@
             if (!pField) return;
             const promoValue = pField.value.trim();
             
-            if (promoValue === 'ветер') {
-                discountPercent = 5;
-            } else if (promoValue === 'Ветер') {
-                discountPercent = 10;
-            } else {
-                alert('Неверный промокод! Попробуйте еще раз.');
-                return;
-            }
+            if (promoValue === 'ветер') { discountPercent = 5; } 
+            else if (promoValue === 'Ветер') { discountPercent = 10; } 
+            else { alert('Неверный промокод! Попробуйте еще раз.'); return; }
 
             const newDeliveryPrice = Math.round(originalDeliveryCost * (1 - discountPercent / 100));
             currentCart.deliveryPrice = newDeliveryPrice;
 
             const pCont = document.getElementById('promo-input-container'); if (pCont) pCont.style.display = 'none';
-            
             const successMsg = document.getElementById('promo-success-msg');
             const textStatus = document.getElementById('promo-text-status');
             
@@ -629,7 +714,7 @@
             if (modal) modal.style.display = 'flex';
         }
 
-        // Автопривязка триггеров
+        // Автопривязка кнопок фильтров сайдбара
         const delCountry = document.getElementById('delivery-country'); if (delCountry) delCountry.onchange = calculateDelivery;
         const delCity = document.getElementById('delivery-city'); if (delCity) delCity.oninput = calculateDelivery;
         const btnBackCatalog = document.getElementById('btn-back-to-catalog'); if (btnBackCatalog) btnBackCatalog.onclick = () => switchScreen('catalog');
@@ -657,8 +742,8 @@
         const searchInput = document.getElementById('search-input') || document.querySelector('.search-input');
         if (searchInput) { searchInput.oninput = () => renderCatalog(); }
 
-        // Стартовый запуск каталога
+        // ЗАПУСК ИНИЦИАЛИЗАЦИИ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ
+        initSelectors();
         renderCatalog();
-    </script>
 </body>
 </html>
