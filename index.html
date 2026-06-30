@@ -327,7 +327,7 @@
     </div>
 
     <script>
-        // 1. ПОЛНАЯ БАЗА ДАННЫХ МАШИН (РАЗБИТА ПО АВТОСАЛОНАМ И МАРКАМ)
+        // 1. ПОЛНАЯ БАЗА ДАННЫХ МАШИН
         const carsData = [
             // Салон: AutoZentrum Berlin (Берлин)
             { id: 1, salon: 'berlin', brand: 'Volkswagen', name: 'Volkswagen Golf', price: '$18 500', priceRaw: 18500, type: 'passenger', qty: 18, year: '2020', drive: 'Передний', mileage: '57 000 км', mileageRaw: 57000, transmission: 'Автомат', imgName: 'volkswagen_golf.png' },
@@ -357,7 +357,7 @@
             { id: 16, salon: 'rome', brand: 'Tesla', name: 'Tesla Model 3', price: '$35 900', priceRaw: 35900, type: 'passenger', qty: 7, year: '2021', drive: 'Полный', mileage: '28 000 км', mileageRaw: 28000, transmission: 'Редуктор', imgName: 'tesla_model_3.png' }
         ];
 
-        // Активные фильтры каталога
+        // Фильтры
         let selectedSalon = 'all';
         let selectedModel = 'all';
         let selectedSort = 'popular';
@@ -367,7 +367,7 @@
         let originalDeliveryCost = 0;
         let discountPercent = 0;
 
-        // Поиск основных экранов
+        // Поиск DOM-элементов
         const catalogScreen = document.getElementById('screen-catalog') || document.querySelector('.screen');
         const detailsScreen = document.getElementById('screen-details');
         const cartScreen = document.getElementById('screen-cart');
@@ -377,69 +377,86 @@
         const menuTransport = document.getElementById('menu-transport-btn');
         const menuCart = document.getElementById('menu-cart-btn');
 
-        // 2. БЕЗОПАСНАЯ ИНИЦИАЛИЗАЦИЯ И СВЯЗЫВАНИЕ ВЫПАДАЮЩИХ СПИСКОВ С ШАПКОЙ
+        // 2. АБСОЛЮТНО БЕЗОПАСНАЯ ИНИЦИАЛИЗАЦИЯ СЕЛЕКТОРОВ (БЕЗ РИСКА ПАДЕНИЯ СКРИПТА)
         function initSelectors() {
-            // Находим абсолютно все теги select на странице, чтобы не зависеть от ID
-            const allSelects = document.querySelectorAll('.header-filters select, .top-nav select, select');
-            
-            if (allSelects.length >= 3) {
-                const salonSelect = allSelects[0];
-                const transportSelect = allSelects[1];
-                const sortSelect = allSelects[2];
+            try {
+                const allSelects = document.querySelectorAll('select');
+                
+                // Если на странице есть хотя бы 3 селекта, связываем их по порядку
+                if (allSelects && allSelects.length >= 3) {
+                    
+                    // 1. Автосалоны
+                    const salonSelect = allSelects[0];
+                    if (salonSelect) {
+                        salonSelect.innerHTML = `
+                            <option value="all">Все автосалоны (Вся Европа)</option>
+                            <option value="berlin">AutoZentrum Berlin (Берлин)</option>
+                            <option value="madrid">Iberia Motors (Мадрид)</option>
+                            <option value="warsaw">Silesia Auto Hub (Варшава)</option>
+                            <option value="rome">Roman Luxury & Electro (Рим)</option>
+                        `;
+                        salonSelect.onchange = (e) => {
+                            selectedSalon = e.target.value;
+                            renderCatalog();
+                        };
+                    }
 
-                // Наполнение автосалонов
-                salonSelect.innerHTML = `
-                    <option value="all">Все автосалоны (Вся Европа)</option>
-                    <option value="berlin">AutoZentrum Berlin (Берлин)</option>
-                    <option value="madrid">Iberia Motors (Мадрид)</option>
-                    <option value="warsaw">Silesia Auto Hub (Варшава)</option>
-                    <option value="rome">Roman Luxury & Electro (Рим)</option>
-                `;
-                salonSelect.onchange = (e) => {
-                    selectedSalon = e.target.value;
-                    renderCatalog();
-                };
+                    // 2. Выбор транспорта (Бренды -> Модели)
+                    const transportSelect = allSelects[1];
+                    if (transportSelect) {
+                        const brands = [...new Set(carsData.map(c => c.brand))].sort();
+                        let optionsHTML = '<option value="all">Выбор транспорта (Все модели)</option>';
+                        brands.forEach(brand => {
+                            optionsHTML += `<optgroup label="${brand}">`;
+                            const models = [...new Set(carsData.filter(c => c.brand === brand).map(c => c.name))].sort();
+                            models.forEach(model => {
+                                optionsHTML += `<option value="${model}">${model}</option>`;
+                            });
+                            optionsHTML += `</optgroup>`;
+                        });
+                        transportSelect.innerHTML = optionsHTML;
+                        transportSelect.onchange = (e) => {
+                            selectedModel = e.target.value;
+                            renderCatalog();
+                        };
+                    }
 
-                // Наполнение сгруппированного транспорта по маркам и моделям
-                const brands = [...new Set(carsData.map(c => c.brand))].sort();
-                let optionsHTML = '<option value="all">Выбор транспорта (Все модели)</option>';
-                brands.forEach(brand => {
-                    optionsHTML += `<optgroup label="${brand}">`;
-                    const models = [...new Set(carsData.filter(c => c.brand === brand).map(c => c.name))].sort();
-                    models.forEach(model => {
-                        optionsHTML += `<option value="${model}">${model}</option>`;
-                    });
-                    optionsHTML += `</optgroup>`;
-                });
-                transportSelect.innerHTML = optionsHTML;
-                transportSelect.onchange = (e) => {
-                    selectedModel = e.target.value;
-                    renderCatalog();
-                };
-
-                // Наполнение сортировки
-                sortSelect.innerHTML = `
-                    <option value="popular">Сортировать: Популярные</option>
-                    <option value="price-asc">Цена: От дешевых к дорогим</option>
-                    <option value="price-desc">Цена: От дорогих к дешевым</option>
-                    <option value="year-desc">Год выпуска: Свежие</option>
-                    <option value="mileage-asc">Пробег: Минимальный</option>
-                `;
-                sortSelect.onchange = (e) => {
-                    selectedSort = e.target.value;
-                    renderCatalog();
-                };
+                    // 3. Рабочая сортировка
+                    const sortSelect = allSelects[2];
+                    if (sortSelect) {
+                        sortSelect.innerHTML = `
+                            <option value="popular">Сортировать: Популярные</option>
+                            <option value="price-asc">Цена: От дешевых к дорогим</option>
+                            <option value="price-desc">Цена: От дорогих к дешевым</option>
+                            <option value="year-desc">Год выпуска: Свежие</option>
+                            <option value="mileage-asc">Пробег: Минимальный</option>
+                        `;
+                        sortSelect.onchange = (e) => {
+                            selectedSort = e.target.value;
+                            renderCatalog();
+                        };
+                    }
+                }
+            } catch (err) {
+                console.error("Ошибка инициализации селекторов фильтрации: ", err);
             }
         }
 
-        // 3. ОТРИСОВКА КАТАЛОГА (ФИЛЬТРАЦИЯ + СОРТИРОВКА)
+        // 3. ОТРИСОВКА КАТАЛОГА (С НАДЕЖНОЙ ЗАЩИТОЙ ОТ NULL)
         function renderCatalog() {
-            if (!carsGrid) return;
+            if (!carsGrid) {
+                console.warn("Контейнер каталога (cars-grid-container) не найден на странице.");
+                return;
+            }
             carsGrid.innerHTML = '';
             
+            let searchWord = '';
             const searchEl = document.getElementById('search-input') || document.querySelector('.search-input');
-            const searchWord = searchEl ? searchEl.value.toLowerCase() : '';
+            if (searchEl) {
+                searchWord = searchEl.value.toLowerCase();
+            }
             
+            // Фильтрация данных
             let filteredCars = carsData.filter(car => {
                 const matchesSearch = car.name.toLowerCase().includes(searchWord);
                 const matchesSalon = (selectedSalon === 'all') || (car.salon === selectedSalon);
@@ -448,7 +465,7 @@
                 return matchesSearch && matchesSalon && matchesModel && matchesType;
             });
             
-            // Логика сортировки
+            // Матрица сортировки
             if (selectedSort === 'price-asc') {
                 filteredCars.sort((a, b) => a.priceRaw - b.priceRaw);
             } else if (selectedSort === 'price-desc') {
@@ -466,6 +483,7 @@
                 return;
             }
 
+            // Вывод карточек на страницу
             filteredCars.forEach(car => {
                 const card = document.createElement('div');
                 card.className = 'car-card';
@@ -485,7 +503,7 @@
             });
         }
 
-        // 4. НАВИГАЦИЯ И УПРАВЛЕНИЕ ЭКРАНАМИ
+        // 4. НАВИГАЦИЯ И УПРАВЛЕНИЕ СТРАНИЦАМИ
         function switchScreen(target) {
             if (catalogScreen) catalogScreen.classList.remove('active-screen');
             if (detailsScreen) detailsScreen.classList.remove('active-screen');
@@ -552,7 +570,7 @@
             }
         }
 
-        // Добавление в корзину
+        // Логика корзины
         const actionBuyClick = document.getElementById('action-buy-click');
         if (actionBuyClick) {
             actionBuyClick.onclick = () => { 
@@ -668,7 +686,6 @@
             updateCartTotals();
         }
 
-        // Финальный расчет
         function updateCartTotals() {
             if (!currentCart) return;
             const cDelPrice = document.getElementById('cart-item-del-price'); if (cDelPrice) cDelPrice.innerText = `Доставка: $${currentCart.deliveryPrice.toLocaleString()}`;
@@ -705,7 +722,7 @@
             if (modal) modal.style.display = 'flex';
         }
 
-        // Вспомогательные обработчики и боковые фильтры
+        // Служебные обработчики элементов
         const delCountry = document.getElementById('delivery-country'); if (delCountry) delCountry.onchange = calculateDelivery;
         const delCity = document.getElementById('delivery-city'); if (delCity) delCity.oninput = calculateDelivery;
         const btnBackCatalog = document.getElementById('btn-back-to-catalog'); if (btnBackCatalog) btnBackCatalog.onclick = () => switchScreen('catalog');
@@ -729,11 +746,10 @@
         const applyFiltersBtn = document.getElementById('apply-filters-btn'); if (applyFiltersBtn) applyFiltersBtn.onclick = () => { renderCatalog(); };
         const btnCloseM = document.getElementById('btn-close-modal'); if (btnCloseM) btnCloseM.onclick = () => { if (modal) modal.style.display = 'none'; };
         
-        // Живой ввод поиска
         const searchInput = document.getElementById('search-input') || document.querySelector('.search-input');
         if (searchInput) { searchInput.oninput = () => renderCatalog(); }
 
-        // ТОЧКА ВХОДА: Сначала наполняем выпадающие меню, затем рендерим карточки
+        // ТОЧКА ЗАПУСКА ПРИЛОЖЕНИЯ
         initSelectors();
         renderCatalog();
 </body>
