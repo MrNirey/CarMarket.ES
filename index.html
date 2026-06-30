@@ -7,102 +7,354 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-main: #111215;
-            --bg-card: #17181c;
-            --bg-sidebar: #141518;
-            --bg-input: #1d1e22;
-            --accent-blue: #3b82f6;
+            --bg-main: #121316;
+            --bg-card: #1a1b1f;
+            --bg-sidebar: #16171b;
+            --accent-blue: #2575fc;
             --accent-green: #2ecc71;
             --text-main: #ffffff;
-            --text-muted: #767980;
-            --border-color: #23252a;
+            --text-muted: #8a8d93;
+            --border-color: #262930;
+            --border-radius-flat: 2px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; user-select: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; user-select: none; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-        /* Левое главное меню */
-        .sidebar { width: 220px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 15px 0; justify-content: space-between; }
-        .logo-container { padding: 0 20px 20px 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 15px; }
-        .logo { font-size: 20px; font-weight: 900; color: var(--text-main); font-style: italic; display: flex; align-items: center; gap: 8px; }
-        .logo span { color: #3b82f6; }
-        
-        .menu-scroll { flex: 1; overflow-y: auto; padding: 0 10px; }
-        .menu-group { display: flex; flex-direction: column; gap: 2px; }
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer; border-left: 3px solid transparent; }
-        .menu-item:hover { color: #fff; background: rgba(255,255,255,0.02); }
-        .menu-item.active { background: linear-gradient(90deg, rgba(59,130,246,0.15) 0%, rgba(59,130,246,0) 100%); color: #fff; border-left-color: var(--accent-blue); }
-        .menu-item i { width: 16px; text-align: center; font-size: 14px; }
-        
-        .sidebar-footer { padding: 15px 20px 0 20px; border-top: 1px solid var(--border-color); }
+        /* Sidebar */
+        .sidebar { width: 240px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 20px; justify-content: space-between; }
+        .logo { font-size: 22px; font-weight: 800; color: var(--text-main); font-style: italic; margin-bottom: 30px; }
+        .logo span { color: var(--accent-blue); }
+        .menu-group { display: flex; flex-direction: column; gap: 4px; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: var(--text-muted); text-decoration: none; border-radius: var(--border-radius-flat); font-size: 14px; cursor: pointer; }
+        .menu-item.active { background-color: var(--accent-blue); color: white; }
 
-        /* Основной контент */
-        .main-container { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        /* Main Container */
+        .main-container { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; position: relative; }
+        .header { height: 70px; background-color: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 30px; }
+        .header-filters { display: flex; gap: 15px; }
+        .dropdown-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: var(--border-radius-flat); font-size: 14px; display: flex; align-items: center; gap: 8px; cursor: pointer;}
         
-        /* Верхняя панель */
-        .header { height: 60px; background-color: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
-        .header-filters { display: flex; gap: 10px; }
-        .header-dropdown { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 14px; font-size: 12px; display: flex; align-items: center; gap: 25px; cursor: pointer; font-weight: 600; }
-        .header-dropdown i { font-size: 10px; }
-        
-        .user-panel { display: flex; align-items: center; gap: 20px; }
-        .wallet-info { display: flex; flex-direction: column; align-items: flex-end; font-size: 12px; font-weight: 600; }
-        .cash { color: #fff; display: flex; align-items: center; gap: 5px; }
-        .bank { color: var(--text-muted); }
-        .btn-create { background: var(--accent-blue); color: white; border: none; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-        .user-avatar { width: 32px; height: 32px; background: #555; border-radius: 50%; }
+        .user-balance { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; }
+        .balance-cash { color: #2ecc71; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 5px; }
+        .balance-total { color: var(--text-muted); font-size: 11px; margin-top: 2px; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
 
-        /* Экраны */
-        .screen { display: none; flex: 1; overflow: hidden; }
+        /* Screens */
+        .screen { display: none; flex: 1; padding: 25px; overflow-y: auto; }
         .screen.active-screen { display: flex; }
         
-        /* Сетка каталога */
-        .catalog-layout { display: flex; width: 100%; height: 100%; }
+        /* CATALOG SCREEN */
+        .catalog-layout { display: flex; gap: 25px; width: 100%; }
+        .filters-sidebar { width: 260px; background: var(--bg-card); border-radius: var(--border-radius-flat); padding: 20px; height: fit-content; border: 1px solid var(--border-color); }
+        .filter-section { margin-bottom: 20px; }
+        .filter-title { font-size: 13px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; font-weight: 600;}
         
-        /* Левая панель фильтров */
-        .filters-sidebar { width: 240px; background: var(--bg-sidebar); border-right: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; }
-        .filters-header { display: flex; justify-content: space-between; align-items: center; }
-        .filters-title { font-size: 14px; font-weight: 700; }
-        .btn-reset { color: var(--accent-blue); background: none; border: none; font-size: 11px; cursor: pointer; }
-        
-        .filter-section { display: flex; flex-direction: column; gap: 8px; }
-        .filter-label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        /* Кнопки типов */
-        .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .type-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-muted); padding: 6px; font-size: 11px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-        .type-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
-        
-        /* Инпуты фильтров */
-        .select-input { background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 12px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .range-inputs { display: flex; gap: 8px; }
-        .range-box { background: var(--bg-input); border: 1px solid var(--border-color); flex: 1; display: flex; align-items: center; padding: 6px 10px; }
-        .range-box span { font-size: 11px; color: var(--text-muted); width: 20px; }
-        .range-box input { background: none; border: none; color: white; width: 100%; font-size: 12px; outline: none; }
-        
-        /* Чекбоксы */
-        .checkbox-group { display: flex; flex-direction: column; gap: 6px; }
-        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #fff; cursor: pointer; }
-        .checkbox-item input { accent-color: var(--accent-blue); }
+        .filter-type-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .filter-btn { background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px; border-radius: var(--border-radius-flat); font-size: 12px; cursor: pointer; }
+        .filter-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
 
-        .btn-submit-filter { background: var(--accent-blue); color: white; border: none; padding: 12px; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; margin-top: auto; }
+        .search-input { width: 100%; background: var(--bg-main); border: 1px solid var(--border-color); color: white; padding: 10px; border-radius: var(--border-radius-flat); font-size: 14px; margin-bottom: 15px; }
+        .cars-grid { flex: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; height: fit-content;}
+        
+        /* Car Cards - Строгие Квадратные */
+        .car-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius-flat); padding: 12px; cursor: pointer; transition: all 0.2s; position: relative; height: 260px;}
+        .car-card:hover { border-color: var(--accent-blue); }
+        .car-card-img-container { width: 100%; height: 110px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; background: rgba(255,255,255,0.01); overflow: hidden;}
+        .car-card-img { max-width: 95%; max-height: 95%; object-fit: contain; }
+        .car-card-title { font-size: 15px; font-weight: 600; margin-bottom: 5px; }
+        .car-card-dealer { font-size: 12px; color: var(--text-muted); position: absolute; bottom: 38px; left: 12px; }
+        .car-card-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 8px; font-size: 12px; position: absolute; bottom: 12px; left: 12px; right: 12px; }
+        .car-card-price { font-weight: 700; color: #fff; }
 
-        /* Правая часть: Сетка скролла машин */
-        .cars-scroll-area { flex: 1; padding: 20px; overflow-y: auto; background: var(--bg-main); }
-        .cars-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+        /* DETAILS SCREEN */
+        .details-layout { display: flex; flex-direction: column; gap: 20px; width: 100%; }
+        .btn-back { background: var(--bg-card); border: 1px solid var(--border-color); color: white; padding: 10px 18px; border-radius: var(--border-radius-flat); cursor: pointer; display: flex; align-items: center; gap: 8px;}
+        .details-grid { display: grid; grid-template-columns: 1.2fr 1.8fr; gap: 25px; }
         
-        /* Карточка строго 1в1 */
-        .car-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 15px; cursor: pointer; position: relative; display: flex; flex-direction: column; }
-        .car-card:hover { border-color: #333; }
-        .card-info-icon { position: absolute; top: 12px; right: 12px; color: var(--text-muted); font-size: 12px; opacity: 0.6; }
+        .main-product-card { background: var(--bg-card); border-radius: var(--border-radius-flat); padding: 25px; border: 1px solid var(--border-color); }
+        .main-car-img-container { width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.01); margin-bottom: 20px;}
+        .main-car-img { max-width: 95%; max-height: 95%; object-fit: contain; }
         
-        .car-card-img-container { width: 100%; height: 120px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
-        .car-card-img { max-width: 90%; max-height: 90%; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); }
+        .car-title-large { font-size: 24px; font-weight: 700; margin-bottom: 5px; }
+        .car-price-large { font-size: 22px; color: var(--accent-green); font-weight: 700; margin-bottom: 20px; }
+        .btn-buy-now { width: 100%; background: var(--accent-blue); color: white; border: none; padding: 14px; border-radius: var(--border-radius-flat); font-weight: 600; font-size: 15px; cursor: pointer; margin-bottom: 15px; }
         
-        .car-card-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
-        .car-card-dealer { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; }
-        
-        .car-card-meta { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.03); padding-top: 10px; margin-top: auto; }
-        .car-card-meta span strong { color: #fff; font-weight: 600; }
+        /* Демо-методы оплаты */
+        .payment-methods-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
+        .payment-methods-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+        .pay-badge { background: #121316; border: 1px solid var(--border-color); padding: 8px; text-align: center; font-size: 11px; color: var(--text-muted); font-weight: 600; border-radius: var(--border-radius-flat); cursor: not-allowed; display: flex; flex-direction: column; align-items: center; gap: 4px;}
+        .pay-badge i { font-size: 14px; color: #cbd5e1; }
 
-        /* ЭКРАН ДЕТАЛЕЙ (СТ
+        /* Калькулятор Доставки */
+        .delivery-box { background: #121316; border: 1px solid var(--border-color); padding: 15px; margin-bottom: 20px; border-radius: var(--border-radius-flat); }
+        .delivery-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; color: #fff; display: flex; align-items: center; gap: 6px; }
+        .delivery-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .delivery-select, .delivery-input { background: var(--bg-card); border: 1px solid var(--border-color); color: white; padding: 8px; font-size: 12px; border-radius: var(--border-radius-flat); width: 100%; outline: none; }
+        .delivery-result { font-size: 12px; color: var(--text-muted); display: flex; justify-content: space-between; border-top: 1px dotted var(--border-color); padding-top: 8px; }
+        .delivery-price { color: var(--accent-green); font-weight: bold; }
+
+        .description-box { margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px; }
+        .description-title { font-size: 14px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
+        .description-text { font-size: 14px; color: #cbd5e1; line-height: 1.5; }
+
+        .specs-box { background: var(--bg-card); border-radius: var(--border-radius-flat); padding: 20px; border: 1px solid var(--border-color); margin-bottom: 20px; }
+        .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px; }
+        .spec-item { display: flex; justify-content: space-between; border-bottom: 1px solid #22252a; padding-bottom: 6px; }
+        .spec-label { color: var(--text-muted); }
+        
+        .table-container { background: var(--bg-card); border-radius: var(--border-radius-flat); border: 1px solid var(--border-color); overflow: hidden; }
+        .table-title { padding: 15px; font-size: 14px; font-weight: 600; border-bottom: 1px solid var(--border-color); background: #18191d;}
+        .offers-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        .offers-table th { background: #1e2024; color: var(--text-muted); padding: 12px 15px; font-size: 11px; text-transform: uppercase;}
+        .offers-table td { padding: 14px 15px; border-bottom: 1px solid var(--border-color); }
+        .offers-table tr:hover td { background: #202227; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: var(--bg-card); border: 1px solid var(--border-color); padding: 30px; border-radius: var(--border-radius-flat); text-align: center; max-width: 400px; width: 100%;}
+        .btn-close-modal { margin-top: 20px; background: var(--accent-blue); color: white; border: none; padding: 10px 24px; border-radius: var(--border-radius-flat); cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div>
+            <div class="logo">WIWANG <span>MARKETPLACE</span></div>
+            <div class="menu-group">
+                <a class="menu-item active"><i class="fa-solid fa-car"></i> Транспорт</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="header">
+            <div class="header-filters">
+                <button class="dropdown-btn">Выбор автосалона <i class="fa-solid fa-chevron-down"></i></button>
+                <button class="dropdown-btn">Выбор транспорта <i class="fa-solid fa-chevron-down"></i></button>
+                <button class="dropdown-btn">Сортировать: Популярные <i class="fa-solid fa-chevron-down"></i></button>
+            </div>
+            <div class="header-right">
+                <div class="user-balance">
+                    <div class="balance-cash">$1 559 <i class="fa-solid fa-briefcase" style="margin-left: 5px;"></i></div>
+                    <div class="balance-total">$2 248 840 🖥️</div>
+                </div>
+                <button class="btn-create" style="background: #2575fc; padding: 10px 20px;">+ Создать</button>
+            </div>
+        </div>
+
+        <div class="screen active-screen" id="screen-catalog">
+            <div class="catalog-layout">
+                <div class="filters-sidebar">
+                    <div class="filter-section">
+                        <div class="filter-title">Поиск модели</div>
+                        <input type="text" id="search-input" class="search-input" placeholder="Введите название...">
+                    </div>
+                    <div class="filter-section">
+                        <div class="filter-title">Тип транспорта</div>
+                        <div class="filter-type-buttons">
+                            <button class="filter-btn active" id="filter-all-btn">Все</button>
+                            <button class="filter-btn" id="filter-cars-btn">Легковые</button>
+                        </div>
+                    </div>
+                    <button class="btn-create" id="apply-filters-btn" style="width: 100%;">Применить фильтр</button>
+                </div>
+                <div class="cars-grid" id="cars-grid-container"></div>
+            </div>
+        </div>
+
+        <div class="screen" id="screen-details">
+            <div class="details-layout">
+                <div>
+                    <button class="btn-back" id="btn-back-to-catalog"><i class="fa-solid fa-arrow-left"></i> Назад к выбору транспорта</button>
+                </div>
+                <div class="details-grid">
+                    <div class="left-panel">
+                        <div class="main-product-card">
+                            <div class="main-car-img-container">
+                                <img src="" id="detail-img" class="main-car-img" alt="Car">
+                            </div>
+                            <div class="car-title-large" id="detail-title">Загрузка...</div>
+                            <div class="car-price-large" id="detail-price">$0</div>
+                            
+                            <div class="delivery-box">
+                                <div class="delivery-title"><i class="fa-solid fa-truck-ramp-box"></i> Расчет доставки из Берлина</div>
+                                <div class="delivery-fields">
+                                    <select class="delivery-select" id="delivery-country">
+                                        <option value="500" data-name="Польша">Польша (~500 км)</option>
+                                        <option value="1050" data-name="Франция">Франция (~1050 км)</option>
+                                        <option value="1600" data-name="Италия">Италия (~1600 км)</option>
+                                        <option value="2300" data-name="Испания" selected>Испания (~2300 км)</option>
+                                        <option value="2800" data-name="Португалия">Португалия (~2800 км)</option>
+                                    </select>
+                                    <input type="text" class="delivery-input" id="delivery-city" placeholder="Введите город..." value="Madrid">
+                                </div>
+                                <div class="delivery-result">
+                                    <span>Стоимость доставки:</span>
+                                    <span class="delivery-price" id="delivery-cost">$0</span>
+                                </div>
+                            </div>
+
+                            <div class="payment-methods-title">Способы оплаты (Демо)</div>
+                            <div class="payment-methods-grid">
+                                <div class="pay-badge"><i class="fa-brands fa-bitcoin" style="color:#f7931a;"></i>BTC</div>
+                                <div class="pay-badge"><i class="fa-brands fa-ethereum" style="color:#627eea;"></i>ETH</div>
+                                <div class="pay-badge"><i class="fa-solid fa-credit-card" style="color:#eb001b;"></i>Card</div>
+                                <div class="pay-badge"><i class="fa-solid fa-wallet" style="color:#ff8c00;"></i>QIWI</div>
+                            </div>
+
+                            <button class="btn-buy-now" id="action-buy-click">Купить сейчас</button>
+                            <div class="description-box">
+                                <div class="description-title">Описание</div>
+                                <div class="description-text" id="detail-desc">Загрузка...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-panel">
+                        <div class="specs-box">
+                            <h3 style="margin-bottom:15px; font-size:16px;">Характеристики</h3>
+                            <div class="specs-grid">
+                                <div class="spec-item"><span class="spec-label">Год выпуска</span><span class="spec-val" id="spec-year">-</span></div>
+                                <div class="spec-item"><span class="spec-label">Привод</span><span class="spec-val" id="spec-drive">-</span></div>
+                                <div class="spec-item"><span class="spec-label">Пробег</span><span class="spec-val" id="spec-mileage">-</span></div>
+                                <div class="spec-item"><span class="spec-label">Коробка</span><span class="spec-val" id="spec-transmission">-</span></div>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-title">Другие предложения на рынке</div>
+                            <table class="offers-table">
+                                <thead>
+                                    <tr>
+                                        <th>Продавец</th>
+                                        <th>Пробег</th>
+                                        <th>Коробка</th>
+                                        <th>Цена</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="offers-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="success-modal">
+        <div class="modal-content">
+            <div class="modal-icon" style="font-size:50px; color:var(--accent-green);"><i class="fa-solid fa-circle-check"></i></div>
+            <h2 style="margin-top:15px;">Поздравляем!</h2>
+            <p style="color: var(--text-muted); margin-top: 10px;" id="modal-car-name">Вы успешно оформили покупку автомобиля.</p>
+            <button class="btn-close-modal" id="btn-close-modal">Отлично</button>
+        </div>
+    </div>
+
+    <script>
+        // ДАННЫЕ С ПУТЯМИ К ТВОЕЙ ПАПКЕ Car/
+        const carsData = [
+            { id: 1, name: 'Volkswagen Golf', price: '$18 500', type: 'passenger', qty: 18, year: '2020', drive: 'Передний', mileage: '57 000 км', transmission: 'Автомат', imgName: 'volkswagen_golf.png' },
+            { id: 2, name: 'Skoda Octavia', price: '$20 900', type: 'passenger', qty: 16, year: '2021', drive: 'Передний', mileage: '42 000 км', transmission: 'Автомат', imgName: 'skoda_octavia.png' },
+            { id: 3, name: 'BMW 3 Series', price: '$32 900', type: 'passenger', qty: 21, year: '2019', drive: 'Задний', mileage: '68 000 км', transmission: 'Автомат', imgName: 'bmw_3_series.png' },
+            { id: 4, name: 'Audi A4', price: '$28 900', type: 'passenger', qty: 14, year: '2020', drive: 'Передний', mileage: '61 000 км', transmission: 'Автомат', imgName: 'audi_a4.png' },
+            { id: 5, name: 'Mercedes-Benz C-Class', price: '$34 900', type: 'passenger', qty: 12, year: '2019', drive: 'Задний', mileage: '54 000 км', transmission: 'Автомат', imgName: 'mercedes-benz_c-class.png' },
+            { id: 6, name: 'Toyota Corolla', price: '$17 900', type: 'passenger', qty: 20, year: '2021', drive: 'Передний', mileage: '35 000 км', transmission: 'Вариатор', imgName: 'toyota_corolla.png' },
+            { id: 7, name: 'Honda Civic', price: '$19 900', type: 'passenger', qty: 15, year: '2020', drive: 'Передний', mileage: '49 000 км', transmission: 'Автомат', imgName: 'honda_civic.png' },
+            { id: 8, name: 'Ford Focus', price: '$16 900', type: 'passenger', qty: 17, year: '2018', drive: 'Передний', mileage: '82 000 км', transmission: 'Робот', imgName: 'ford_focus.png' },
+            { id: 9, name: 'Peugeot 308', price: '$18 300', type: 'passenger', qty: 13, year: '2020', drive: 'Передний', mileage: '41 000 км', transmission: 'Автомат', imgName: 'peugeot_308.png' },
+            { id: 10, name: 'Renault Megane', price: '$17 200', type: 'passenger', qty: 11, year: '2019', drive: 'Передний', mileage: '73 000 км', transmission: 'Механика', imgName: 'renault_megane.png' },
+            { id: 11, name: 'Nissan Qashqai', price: '$22 900', type: 'passenger', qty: 13, year: '2020', drive: 'Передний', mileage: '45 000 км', transmission: 'Вариатор', imgName: 'nissan_qashqai.png' },
+            { id: 12, name: 'Volkswagen Tiguan', price: '$27 900', type: 'passenger', qty: 15, year: '2021', drive: 'Полный', mileage: '33 000 км', transmission: 'Робот', imgName: 'volkswagen_tiguan.png' },
+            { id: 13, name: 'Volvo XC60', price: '$39 900', type: 'passenger', qty: 10, year: '2020', drive: 'Полный', mileage: '59 000 км', transmission: 'Автомат', imgName: 'volvo_xc60.png' },
+            { id: 14, name: 'Audi Q5', price: '$37 900', type: 'passenger', qty: 9, year: '2019', drive: 'Полный', mileage: '66 000 км', transmission: 'Робот', imgName: 'audi_q5.png' },
+            { id: 15, name: 'BMW X3', price: '$41 900', type: 'passenger', qty: 8, year: '2020', drive: 'Полный', mileage: '51 000 км', transmission: 'Автомат', imgName: 'bmw_x3.png' },
+            { id: 16, name: 'Tesla Model 3', price: '$35 900', type: 'passenger', qty: 7, year: '2021', drive: 'Полный', mileage: '28 000 км', transmission: 'Редуктор', imgName: 'tesla_model_3.png' },
+            { id: 17, name: 'Volkswagen ID.4', price: '$32 500', type: 'passenger', qty: 6, year: '2022', drive: 'Задний', mileage: '19 000 км', transmission: 'Редуктор', imgName: 'volkswagen_id.4.png' },
+            { id: 18, name: 'Peugeot 2008', price: '$19 800', type: 'passenger', qty: 9, year: '2021', drive: 'Передний', mileage: '31 000 км', transmission: 'Автомат', imgName: 'peugeot_2008.png' },
+            { id: 19, name: 'Kia Sportage', price: '$22 400', type: 'passenger', qty: 11, year: '2020', drive: 'Передний', mileage: '54 000 км', transmission: 'Автомат', imgName: 'kia_sportage.png' },
+            { id: 20, name: 'Hyundai Tucson', price: '$23 900', type: 'passenger', qty: 10, year: '2021', drive: 'Передний', mileage: '41 000 км', transmission: 'Автомат', imgName: 'hyundai_tucson.png' }
+        ];
+
+        let selectedType = 'all';
+        const catalogScreen = document.getElementById('screen-catalog');
+        const detailsScreen = document.getElementById('screen-details');
+        const carsGrid = document.getElementById('cars-grid-container');
+        const modal = document.getElementById('success-modal');
+
+        function renderCatalog() {
+            carsGrid.innerHTML = '';
+            const searchWord = document.getElementById('search-input').value.toLowerCase();
+            const filteredCars = carsData.filter(car => {
+                const matchesSearch = car.name.toLowerCase().includes(searchWord);
+                const matchesType = (selectedType === 'all') || (car.type === selectedType);
+                return matchesSearch && matchesType;
+            });
+            filteredCars.forEach(car => {
+                const card = document.createElement('div');
+                card.className = 'car-card';
+                card.onclick = () => openDetails(car);
+                card.innerHTML = `
+                    <div class="car-card-img-container">
+                        <img src="Car/${car.imgName}" class="car-card-img" alt="${car.name}">
+                    </div>
+                    <div class="car-card-title">${car.name}</div>
+                    <div class="car-card-dealer">Официальный дилер</div>
+                    <div class="car-card-footer">
+                        <div class="car-card-price">Цена от: ${car.price}</div>
+                        <div style="color:var(--text-muted)">Кол-во: ${car.qty}</div>
+                    </div>
+                `;
+                carsGrid.appendChild(card);
+            });
+        }
+
+        function calculateDelivery() {
+            const distance = parseInt(document.getElementById('delivery-country').value);
+            // 1 км = $1.5 доставки + базовый тариф $200
+            const finalCost = Math.round(distance * 1.5 + 200);
+            document.getElementById('delivery-cost').innerText = `$${finalCost.toLocaleString()}`;
+        }
+
+        function openDetails(car) {
+            catalogScreen.classList.remove('active-screen');
+            detailsScreen.classList.add('active-screen');
+            
+            document.getElementById('detail-img').src = `Car/${car.imgName}`;
+            document.getElementById('detail-title').innerText = car.name;
+            document.getElementById('detail-price').innerText = car.price;
+            document.getElementById('detail-desc').innerText = `Оригинальный ${car.name}. Полный пакет документов, идеальное состояние кузова и салона, не требует вложений. Готов к отправке автовозом.`;
+            
+            document.getElementById('spec-year').innerText = car.year;
+            document.getElementById('spec-drive').innerText = car.drive;
+            document.getElementById('spec-mileage').innerText = car.mileage;
+            document.getElementById('spec-transmission').innerText = car.transmission;
+            
+            calculateDelivery();
+
+            const tbody = document.getElementById('offers-table-body');
+            tbody.innerHTML = `
+                <tr class="row-active"><td>Alexey Petrov</td><td>${car.mileage}</td><td>${car.transmission}</td><td style="font-weight:bold; color:var(--accent-green);">${car.price}</td></tr>
+                <tr><td>Dmitriy Sokolov</td><td>63 500 км</td><td>Автомат</td><td>$17 990</td></tr>
+            `;
+        }
+
+        document.getElementById('delivery-country').onchange = calculateDelivery;
+        document.getElementById('delivery-city').oninput = calculateDelivery;
+
+        document.getElementById('btn-back-to-catalog').onclick = () => { detailsScreen.classList.remove('active-screen'); catalogScreen.classList.add('active-screen'); };
+        document.getElementById('filter-all-btn').onclick = function() { document.getElementById('filter-cars-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'all'; renderCatalog();};
+        document.getElementById('filter-cars-btn').onclick = function() { document.getElementById('filter-all-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'passenger'; renderCatalog();};
+        document.getElementById('apply-filters-btn').onclick = () => { renderCatalog(); };
+        
+        document.getElementById('action-buy-click').onclick = () => { 
+            const carName = document.getElementById('detail-title').innerText; 
+            const city = document.getElementById('delivery-city').value || 'выбранный город';
+            const country = document.getElementById('delivery-country').options[document.getElementById('delivery-country').selectedIndex].getAttribute('data-name');
+            document.getElementById('modal-car-name').innerText = `Вы успешно оформили заказ на ${carName} с доставкой в ${country} (${city})!`; 
+            modal.style.display = 'flex'; 
+        };
+        
+        document.getElementById('btn-close-modal').onclick = () => { modal.style.display = 'none'; };
+        renderCatalog();
+    </script>
+</body>
+</html>
