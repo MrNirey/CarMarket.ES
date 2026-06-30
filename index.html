@@ -596,14 +596,45 @@
             modal.style.display = 'flex';
         }
 
-        document.getElementById('delivery-country').onchange = calculateDelivery;
-        document.getElementById('delivery-city').oninput = calculateDelivery;
-        document.getElementById('btn-back-to-catalog').onclick = () => switchScreen('catalog');
-        document.getElementById('filter-all-btn').onclick = function() { document.getElementById('filter-cars-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'all'; renderCatalog();};
-        document.getElementById('filter-cars-btn').onclick = function() { document.getElementById('filter-all-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'passenger'; renderCatalog();};
-        document.getElementById('apply-filters-btn').onclick = () => { renderCatalog(); };
-        document.getElementById('btn-close-modal').onclick = () => { modal.style.display = 'none'; };
+       // Безопасное назначение событий
+        const deliveryCountry = document.getElementById('delivery-country');
+        if (deliveryCountry) deliveryCountry.onchange = calculateDelivery;
+
+        const deliveryCity = document.getElementById('delivery-city');
+        if (deliveryCity) deliveryCity.oninput = calculateDelivery;
+
+        const btnBackToCatalog = document.getElementById('btn-back-to-catalog');
+        if (btnBackToCatalog) btnBackToCatalog.onclick = () => switchScreen('catalog');
+
+        const filterAllBtn = document.getElementById('filter-all-btn');
+        if (filterAllBtn) {
+            filterAllBtn.onclick = function() { 
+                const fCars = document.getElementById('filter-cars-btn');
+                if (fCars) fCars.classList.remove('active'); 
+                this.classList.add('active'); 
+                selectedType = 'all'; 
+                renderCatalog();
+            };
+        }
+
+        const filterCarsBtn = document.getElementById('filter-cars-btn');
+        if (filterCarsBtn) {
+            filterCarsBtn.onclick = function() { 
+                const fAll = document.getElementById('filter-all-btn');
+                if (fAll) fAll.classList.remove('active'); 
+                this.classList.add('active'); 
+                selectedType = 'passenger'; 
+                renderCatalog();
+            };
+        }
+
+        const applyFiltersBtn = document.getElementById('apply-filters-btn');
+        if (applyFiltersBtn) applyFiltersBtn.onclick = () => { renderCatalog(); };
+
+        const btnCloseModal = document.getElementById('btn-close-modal');
+        if (btnCloseModal) btnCloseModal.onclick = () => { modal.style.display = 'none'; };
         
+        // Запуск
         renderCatalog();
     </script>
 </body>
