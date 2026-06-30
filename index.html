@@ -244,14 +244,80 @@
         </div>
     </div>
 
-    <div class="modal" id="success-modal">
-        <div class="modal-content">
-            <div class="modal-icon" style="font-size:50px; color:var(--accent-green);"><i class="fa-solid fa-circle-check"></i></div>
-            <h2 style="margin-top:15px;">Поздравляем!</h2>
-            <p style="color: var(--text-muted); margin-top: 10px;" id="modal-car-name">Вы успешно оформили покупку автомобиля.</p>
-            <button class="btn-close-modal" id="btn-close-modal">Отлично</button>
+    <div class="screen" id="screen-cart">
+            <div class="catalog-layout">
+                <div class="filters-sidebar">
+                    <div class="filter-section">
+                        <div class="filter-title">Возможно вам интересно</div>
+                        <div style="background: var(--bg-main); border:1px solid var(--border-color); padding:10px; margin-bottom:10px;">
+                            <div style="font-size:13px; font-weight:600; margin-bottom:4px;">🔥 Спойлер Carbon-X</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-bottom:6px;">Снижает сопротивление на 4%</div>
+                            <div style="font-size:12px; color:var(--accent-green); font-weight:bold;">$1 200</div>
+                        </div>
+                        <div style="background: var(--bg-main); border:1px solid var(--border-color); padding:10px; margin-bottom:10px;">
+                            <div style="font-size:13px; font-weight:600; margin-bottom:4px;">⚙️ Чип-тюнинг Stage 1</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-bottom:6px;">+45 л.с. без потери ресурса</div>
+                            <div style="font-size:12px; color:var(--accent-green); font-weight:bold;">$850</div>
+                        </div>
+                        <div style="background: var(--bg-main); border:1px solid var(--border-color); padding:10px;">
+                            <div style="font-size:13px; font-weight:600; margin-bottom:4px;">🛞 Диски BBS Super RS</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-bottom:6px;">Кованые, ультралегкие R19</div>
+                            <div style="font-size:12px; color:var(--accent-green); font-weight:bold;">$3 400</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="flex:1; display:flex; flex-direction:column; gap:15px;">
+                    <div class="table-container" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                        <div class="table-title">Выбранный автомобиль к покупке</div>
+                        <div id="cart-empty-msg" style="padding:30px; text-align:center; color:var(--text-muted);">Ваша корзина пуста. Выберите автомобиль в каталоге.</div>
+                        <div id="cart-item-row" style="display:none; align-items:center; justify-content:between; padding:20px; border-bottom:1px solid var(--border-color);">
+                            <div style="display:flex; align-items:center; gap:20px;">
+                                <div style="width:80px; height:50px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02);"><img src="" id="cart-item-img" style="max-width:100%; max-height:100%; object-fit:contain;"></div>
+                                <div>
+                                    <div id="cart-item-name" style="font-weight:600; font-size:16px;">-</div>
+                                    <div id="cart-item-delivery-info" style="font-size:12px; color:var(--text-muted); margin-top:4px;">-</div>
+                                </div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div id="cart-item-price" style="font-weight:700; font-size:16px; color:#fff;">$0</div>
+                                <div id="cart-item-del-price" style="font-size:12px; color:var(--text-muted); margin-top:4px;">Доставка: $0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cart-checkout-block" style="display:none; background: var(--bg-card); border: 1px solid var(--border-color); padding:20px; display:none; flex-direction:column; gap:20px;">
+                        <div>
+                            <div class="payment-methods-title">Выберите способ оплаты (Кликабельно)</div>
+                            <div class="payment-methods-grid" style="margin-bottom:0;">
+                                <div class="pay-badge active-pay" class="cart-pay-option" style="cursor:pointer;" onclick="selectPay(this)"><i class="fa-brands fa-bitcoin" style="color:#f7931a;"></i>Bitcoin</div>
+                                <div class="pay-badge" class="cart-pay-option" style="cursor:pointer;" onclick="selectPay(this)"><i class="fa-brands fa-ethereum" style="color:#627eea;"></i>Ethereum</div>
+                                <div class="pay-badge" class="cart-pay-option" style="cursor:pointer;" onclick="selectPay(this)"><i class="fa-solid fa-credit-card" style="color:#eb001b;"></i>Карта банка</div>
+                                <div class="pay-badge" class="cart-pay-option" style="cursor:pointer;" onclick="selectPay(this)"><i class="fa-solid fa-wallet" style="color:#ff8c00;"></i>QIWI Кошелек</div>
+                            </div>
+                        </div>
+
+                        <div style="border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color); padding:15px 0;">
+                            <div class="filter-title" style="margin-bottom:8px;">Промокод на скидку доставки</div>
+                            <div id="promo-input-container" style="display:flex; gap:10px;">
+                                <input type="text" id="promo-field" class="search-input" placeholder="Введите промокод (например, Ветер)..." style="margin-bottom:0; max-width:300px;">
+                                <button class="btn-create" onclick="applyPromoCode()" style="padding:0 20px;">Применить</button>
+                            </div>
+                            <div id="promo-success-msg" style="display:none; align-items:center; gap:8px; color:var(--accent-green); font-size:13px; margin-top:5px;">
+                                <i class="fa-solid fa-circle-check"></i> <span id="promo-text-status"></span>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:between; align-items:center;">
+                            <div style="font-size:14px; color:var(--text-muted);">
+                                Общая стоимость с учетом доставки: <span id="final-total-price" style="font-size:20px; font-weight:800; color:white; margin-left:10px;">$0</span>
+                            </div>
+                            <button class="btn-buy-now" onclick="confirmFinalOrder()" style="margin-bottom:0; width:auto; padding:12px 35px;">Оформить заказ окончательно</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
     <script>
         // Данные с путями к папке Car/
