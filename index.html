@@ -327,40 +327,37 @@
     </div>
 
     <script>
-        // База данных машин
-        // 1. РАСШИРЕННАЯ БАЗА ДАННЫХ МАШИН ПО АВТОСАЛОНАМ (СЕГМЕНТАМ)
+        // 1. ПОЛНАЯ БАЗА ДАННЫХ МАШИН (РАЗБИТА ПО АВТОСАЛОНАМ И МАРКАМ)
         const carsData = [
-            // Салон: AutoZentrum Berlin (Германия) - Немецкая классика и средний класс
+            // Салон: AutoZentrum Berlin (Берлин)
             { id: 1, salon: 'berlin', brand: 'Volkswagen', name: 'Volkswagen Golf', price: '$18 500', priceRaw: 18500, type: 'passenger', qty: 18, year: '2020', drive: 'Передний', mileage: '57 000 км', mileageRaw: 57000, transmission: 'Автомат', imgName: 'volkswagen_golf.png' },
             { id: 2, salon: 'berlin', brand: 'Skoda', name: 'Skoda Octavia', price: '$20 900', priceRaw: 20900, type: 'passenger', qty: 16, year: '2021', drive: 'Передний', mileage: '42 000 км', mileageRaw: 42000, transmission: 'Автомат', imgName: 'skoda_octavia.png' },
             { id: 3, salon: 'berlin', brand: 'BMW', name: 'BMW 3 Series', price: '$32 900', priceRaw: 32900, type: 'passenger', qty: 21, year: '2019', drive: 'Задний', mileage: '68 000 км', mileageRaw: 68000, transmission: 'Автомат', imgName: 'bmw_3_series.png' },
             { id: 4, salon: 'berlin', brand: 'Audi', name: 'Audi A4', price: '$28 900', priceRaw: 28900, type: 'passenger', qty: 14, year: '2020', drive: 'Передний', mileage: '61 000 км', mileageRaw: 61000, transmission: 'Автомат', imgName: 'audi_a4.png' },
             { id: 12, salon: 'berlin', brand: 'Volkswagen', name: 'Volkswagen Tiguan', price: '$27 900', priceRaw: 27900, type: 'passenger', qty: 15, year: '2021', drive: 'Полный', mileage: '33 000 км', mileageRaw: 33000, transmission: 'Робот', imgName: 'volkswagen_tiguan.png' },
 
-            // Салон: Iberia Motors (Мадрид) - Доступные городские авто и хэтчбеки
+            // Салон: Iberia Motors (Мадрид)
             { id: 6, salon: 'madrid', brand: 'Toyota', name: 'Toyota Corolla', price: '$17 900', priceRaw: 17900, type: 'passenger', qty: 20, year: '2021', drive: 'Передний', mileage: '35 000 км', mileageRaw: 35000, transmission: 'Вариатор', imgName: 'toyota_corolla.png' },
             { id: 7, salon: 'madrid', brand: 'Honda', name: 'Honda Civic', price: '$19 900', priceRaw: 19900, type: 'passenger', qty: 15, year: '2020', drive: 'Передний', mileage: '49 000 км', mileageRaw: 49000, transmission: 'Автомат', imgName: 'honda_civic.png' },
             { id: 8, salon: 'madrid', brand: 'Ford', name: 'Ford Focus', price: '$16 900', priceRaw: 16900, type: 'passenger', qty: 17, year: '2018', drive: 'Передний', mileage: '82 000 км', mileageRaw: 82000, transmission: 'Робот', imgName: 'ford_focus.png' },
             { id: 9, salon: 'madrid', brand: 'Peugeot', name: 'Peugeot 308', price: '$18 300', priceRaw: 18300, type: 'passenger', qty: 13, year: '2020', drive: 'Передний', mileage: '41 000 км', mileageRaw: 41000, transmission: 'Автомат', imgName: 'peugeot_308.png' },
             { id: 18, salon: 'madrid', brand: 'Peugeot', name: 'Peugeot 2008', price: '$19 800', priceRaw: 19800, type: 'passenger', qty: 9, year: '2021', drive: 'Передний', mileage: '31 000 км', mileageRaw: 31000, transmission: 'Автомат', imgName: 'peugeot_2008.png' },
 
-            // Салон: Silesia Auto Hub (Варшава) - Практичные кроссоверы и семейные модели
+            // Салон: Silesia Auto Hub (Варшава)
             { id: 10, salon: 'warsaw', brand: 'Renault', name: 'Renault Megane', price: '$17 200', priceRaw: 17200, type: 'passenger', qty: 11, year: '2019', drive: 'Передний', mileage: '73 000 км', mileageRaw: 73000, transmission: 'Механика', imgName: 'renault_megane.png' },
             { id: 11, salon: 'warsaw', brand: 'Nissan', name: 'Nissan Qashqai', price: '$22 900', priceRaw: 22900, type: 'passenger', qty: 13, year: '2020', drive: 'Передний', mileage: '45 000 км', mileageRaw: 45000, transmission: 'Вариатор', imgName: 'nissan_qashqai.png' },
             { id: 19, salon: 'warsaw', brand: 'Kia', name: 'Kia Sportage', price: '$22 400', priceRaw: 22400, type: 'passenger', qty: 11, year: '2020', drive: 'Передний', mileage: '54 000 км', mileageRaw: 54000, transmission: 'Автомат', imgName: 'kia_sportage.png' },
             { id: 20, salon: 'warsaw', brand: 'Hyundai', name: 'Hyundai Tucson', price: '$23 900', priceRaw: 23900, type: 'passenger', qty: 10, year: '2021', drive: 'Передний', mileage: '41 000 км', mileageRaw: 41000, transmission: 'Автомат', imgName: 'hyundai_tucson.png' },
-            { id: 2, salon: 'warsaw', brand: 'Skoda', name: 'Skoda Octavia', price: '$20 900', priceRaw: 20900, type: 'passenger', qty: 5, year: '2021', drive: 'Передний', mileage: '90 000 км', mileageRaw: 90000, transmission: 'Автомат', imgName: 'skoda_octavia.png' },
 
-            // Салон: Roman Luxury & Electro (Рим) - Премиум сегмент и электромобили
+            // Салон: Roman Luxury & Electro (Рим)
             { id: 5, salon: 'rome', brand: 'Mercedes-Benz', name: 'Mercedes-Benz C-Class', price: '$34 900', priceRaw: 34900, type: 'passenger', qty: 12, year: '2019', drive: 'Задний', mileage: '54 000 км', mileageRaw: 54000, transmission: 'Автомат', imgName: 'mercedes-benz_c-class.png' },
             { id: 13, salon: 'rome', brand: 'Volvo', name: 'Volvo XC60', price: '$39 900', priceRaw: 39900, type: 'passenger', qty: 10, year: '2020', drive: 'Полный', mileage: '59 000 км', mileageRaw: 59000, transmission: 'Автомат', imgName: 'volvo_xc60.png' },
             { id: 14, salon: 'rome', brand: 'Audi', name: 'Audi Q5', price: '$37 900', priceRaw: 37900, type: 'passenger', qty: 9, year: '2019', drive: 'Полный', mileage: '66 000 км', mileageRaw: 66000, transmission: 'Робот', imgName: 'audi_q5.png' },
             { id: 15, salon: 'rome', brand: 'BMW', name: 'BMW X3', price: '$41 900', priceRaw: 41900, type: 'passenger', qty: 8, year: '2020', drive: 'Полный', mileage: '51 000 км', mileageRaw: 51000, transmission: 'Автомат', imgName: 'bmw_x3.png' },
-            { id: 16, salon: 'rome', brand: 'Tesla', name: 'Tesla Model 3', price: '$35 900', priceRaw: 35900, type: 'passenger', qty: 7, year: '2021', drive: 'Полный', mileage: '28 000 км', mileageRaw: 28000, transmission: 'Редуктор', imgName: 'tesla_model_3.png' },
-            { id: 17, salon: 'rome', brand: 'Volkswagen', name: 'Volkswagen ID.4', price: '$32 500', priceRaw: 32500, type: 'passenger', qty: 6, year: '2022', drive: 'Задний', mileage: '19 000 км', mileageRaw: 19000, transmission: 'Редуктор', imgName: 'volkswagen_id.4.png' }
+            { id: 16, salon: 'rome', brand: 'Tesla', name: 'Tesla Model 3', price: '$35 900', priceRaw: 35900, type: 'passenger', qty: 7, year: '2021', drive: 'Полный', mileage: '28 000 км', mileageRaw: 28000, transmission: 'Редуктор', imgName: 'tesla_model_3.png' }
         ];
 
-        // Глобальные переменные фильтрации
+        // Активные фильтры каталога
         let selectedSalon = 'all';
         let selectedModel = 'all';
         let selectedSort = 'popular';
@@ -370,7 +367,7 @@
         let originalDeliveryCost = 0;
         let discountPercent = 0;
 
-        // Поиск DOM-элементов
+        // Поиск основных экранов
         const catalogScreen = document.getElementById('screen-catalog') || document.querySelector('.screen');
         const detailsScreen = document.getElementById('screen-details');
         const cartScreen = document.getElementById('screen-cart');
@@ -380,15 +377,17 @@
         const menuTransport = document.getElementById('menu-transport-btn');
         const menuCart = document.getElementById('menu-cart-btn');
 
-        // Динамические выпадающие списки (Автосалоны, Марки, Модели)
-        const salonSelect = document.getElementById('salon-select') || document.querySelector('[select-salon]') || document.getElementsByTagName('select')[0];
-        const transportSelect = document.getElementById('transport-select') || document.querySelector('[select-transport]') || document.getElementsByTagName('select')[1];
-        const sortSelect = document.getElementById('sort-select') || document.querySelector('[select-sort]') || document.getElementsByTagName('select')[2];
-
-        // 2. ИНИЦИАЛИЗАЦИЯ И НАПОЛНЕНИЕ СЕЛЕКТОРОВ СЕТКИ
+        // 2. БЕЗОПАСНАЯ ИНИЦИАЛИЗАЦИЯ И СВЯЗЫВАНИЕ ВЫПАДАЮЩИХ СПИСКОВ С ШАПКОЙ
         function initSelectors() {
-            // Настройка автосалонов
-            if (salonSelect) {
+            // Находим абсолютно все теги select на странице, чтобы не зависеть от ID
+            const allSelects = document.querySelectorAll('.header-filters select, .top-nav select, select');
+            
+            if (allSelects.length >= 3) {
+                const salonSelect = allSelects[0];
+                const transportSelect = allSelects[1];
+                const sortSelect = allSelects[2];
+
+                // Наполнение автосалонов
                 salonSelect.innerHTML = `
                     <option value="all">Все автосалоны (Вся Европа)</option>
                     <option value="berlin">AutoZentrum Berlin (Берлин)</option>
@@ -400,13 +399,9 @@
                     selectedSalon = e.target.value;
                     renderCatalog();
                 };
-            }
 
-            // Настройка группированного выбора транспорта по Маркам и Моделям
-            if (transportSelect) {
-                // Извлекаем уникальные марки и модели из общей базы данных
+                // Наполнение сгруппированного транспорта по маркам и моделям
                 const brands = [...new Set(carsData.map(c => c.brand))].sort();
-                
                 let optionsHTML = '<option value="all">Выбор транспорта (Все модели)</option>';
                 brands.forEach(brand => {
                     optionsHTML += `<optgroup label="${brand}">`;
@@ -416,16 +411,13 @@
                     });
                     optionsHTML += `</optgroup>`;
                 });
-                
                 transportSelect.innerHTML = optionsHTML;
                 transportSelect.onchange = (e) => {
                     selectedModel = e.target.value;
                     renderCatalog();
                 };
-            }
 
-            // Настройка сортировки
-            if (sortSelect) {
+                // Наполнение сортировки
                 sortSelect.innerHTML = `
                     <option value="popular">Сортировать: Популярные</option>
                     <option value="price-asc">Цена: От дешевых к дорогим</option>
@@ -440,7 +432,7 @@
             }
         }
 
-        // 3. СЛОЖНЫЙ И БЕЗОПАСНЫЙ РЕНДЕРИНГ КАТАЛОГА (ФИЛЬТРАЦИЯ + СОРТИРОВКА)
+        // 3. ОТРИСОВКА КАТАЛОГА (ФИЛЬТРАЦИЯ + СОРТИРОВКА)
         function renderCatalog() {
             if (!carsGrid) return;
             carsGrid.innerHTML = '';
@@ -448,7 +440,6 @@
             const searchEl = document.getElementById('search-input') || document.querySelector('.search-input');
             const searchWord = searchEl ? searchEl.value.toLowerCase() : '';
             
-            // Фильтрация по всем активным параметрам
             let filteredCars = carsData.filter(car => {
                 const matchesSearch = car.name.toLowerCase().includes(searchWord);
                 const matchesSalon = (selectedSalon === 'all') || (car.salon === selectedSalon);
@@ -457,7 +448,7 @@
                 return matchesSearch && matchesSalon && matchesModel && matchesType;
             });
             
-            // Сортировка полученного списка
+            // Логика сортировки
             if (selectedSort === 'price-asc') {
                 filteredCars.sort((a, b) => a.priceRaw - b.priceRaw);
             } else if (selectedSort === 'price-desc') {
@@ -467,7 +458,7 @@
             } else if (selectedSort === 'mileage-asc') {
                 filteredCars.sort((a, b) => a.mileageRaw - b.mileageRaw);
             } else if (selectedSort === 'popular') {
-                filteredCars.sort((a, b) => b.qty - a.qty); // Популярность по доступному количеству
+                filteredCars.sort((a, b) => b.qty - a.qty);
             }
 
             if (filteredCars.length === 0) {
@@ -475,7 +466,6 @@
                 return;
             }
 
-            // Отрисовка квадратных карточек
             filteredCars.forEach(car => {
                 const card = document.createElement('div');
                 card.className = 'car-card';
@@ -495,7 +485,7 @@
             });
         }
 
-        // 4. ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ЭКРАНОВ СТРАНИЦЫ
+        // 4. НАВИГАЦИЯ И УПРАВЛЕНИЕ ЭКРАНАМИ
         function switchScreen(target) {
             if (catalogScreen) catalogScreen.classList.remove('active-screen');
             if (detailsScreen) detailsScreen.classList.remove('active-screen');
@@ -562,7 +552,7 @@
             }
         }
 
-        // Блок работы с корзиной
+        // Добавление в корзину
         const actionBuyClick = document.getElementById('action-buy-click');
         if (actionBuyClick) {
             actionBuyClick.onclick = () => { 
@@ -678,6 +668,7 @@
             updateCartTotals();
         }
 
+        // Финальный расчет
         function updateCartTotals() {
             if (!currentCart) return;
             const cDelPrice = document.getElementById('cart-item-del-price'); if (cDelPrice) cDelPrice.innerText = `Доставка: $${currentCart.deliveryPrice.toLocaleString()}`;
@@ -714,7 +705,7 @@
             if (modal) modal.style.display = 'flex';
         }
 
-        // Автопривязка кнопок фильтров сайдбара
+        // Вспомогательные обработчики и боковые фильтры
         const delCountry = document.getElementById('delivery-country'); if (delCountry) delCountry.onchange = calculateDelivery;
         const delCity = document.getElementById('delivery-city'); if (delCity) delCity.oninput = calculateDelivery;
         const btnBackCatalog = document.getElementById('btn-back-to-catalog'); if (btnBackCatalog) btnBackCatalog.onclick = () => switchScreen('catalog');
@@ -738,11 +729,11 @@
         const applyFiltersBtn = document.getElementById('apply-filters-btn'); if (applyFiltersBtn) applyFiltersBtn.onclick = () => { renderCatalog(); };
         const btnCloseM = document.getElementById('btn-close-modal'); if (btnCloseM) btnCloseM.onclick = () => { if (modal) modal.style.display = 'none'; };
         
-        // Живой поиск
+        // Живой ввод поиска
         const searchInput = document.getElementById('search-input') || document.querySelector('.search-input');
         if (searchInput) { searchInput.oninput = () => renderCatalog(); }
 
-        // ЗАПУСК ИНИЦИАЛИЗАЦИИ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ
+        // ТОЧКА ВХОДА: Сначала наполняем выпадающие меню, затем рендерим карточки
         initSelectors();
         renderCatalog();
 </body>
