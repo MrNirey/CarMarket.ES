@@ -7,135 +7,131 @@
     <style>
         /* БАЗОВЫЕ НАСТРОЙКИ СТИЛЯ (СТРОГИЙ КВАДРАТНЫЙ ДИЗАЙН И ТЕМНАЯ ТЕМА) */
         :root {
-            --bg-main: #0d0d0d;
-            --bg-card: #141414;
-            --bg-input: #1a1a1a;
-            --border-color: #262626;
+            --bg-main: #0a0a0c;
+            --bg-card: #16161a;
+            --bg-input: #202026;
+            --border-color: #2d2d35;
             --text-main: #ffffff;
-            --text-muted: #8c8c8c;
-            --accent: #ffffff;
+            --text-muted: #a0a0ab;
             --accent-green: #00ff66;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            border-radius: 0 !important; /* Полный отказ от скруглений */
+            --radius-main: 8px; /* Мягкое закругление элементов */
         }
 
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
-        header {
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-
-        .top-nav {
+        /* ШАПКА */
+        .top-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            padding: 15px 30px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .logo {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .nav-buttons {
+        .nav-menu {
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
 
-        .nav-btn {
+        .nav-link {
             background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 10px 20px;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 8px 16px;
             cursor: pointer;
-            text-transform: uppercase;
-            font-size: 12px;
-            font-weight: 600;
+            font-weight: 500;
+            border-radius: var(--radius-main);
             transition: all 0.2s ease;
         }
 
-        .nav-btn:hover, .nav-btn.active {
-            background: var(--text-main);
-            color: var(--bg-main);
-            border-color: var(--text-main);
+        .nav-link.active, .nav-link:hover {
+            color: #html;
+            background: var(--bg-input);
+            border-color: var(--border-color);
         }
 
-        /* ПАНЕЛЬ ФИЛЬТРОВ */
-        .filters-panel {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
+        /* СТРУКТУРА С БОКОВОЙ ПАНЕЛЬЮ */
+        .main-layout {
+            padding: 30px;
+        }
+
+        .catalog-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+
+        .left-sidebar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: var(--radius-main);
+            height: fit-content;
+        }
+
+        .sidebar-block {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-block h3 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .search-input, .filter-select {
-            background-color: var(--bg-input);
+            width: 100%;
+            background: var(--bg-input);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 12px 15px;
-            font-size: 14px;
-            flex: 1;
-            min-width: 200px;
+            padding: 10px 12px;
+            box-sizing: border-box;
+            border-radius: 6px;
             outline: none;
         }
 
-        .search-input:focus, .filter-select:focus {
-            border-color: var(--accent);
-        }
-
-        /* СЕТКА КАТАЛОГА */
-        .screen {
-            display: none;
-        }
-
-        .screen.active-screen {
-            display: block;
-        }
-
+        /* КАРТОЧКИ МАШИН */
         .cars-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 20px;
-            margin-top: 10px;
         }
 
-        /* КАРТОЧКА МАШИНЫ */
         .car-card {
-            background-color: var(--bg-card);
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
+            border-radius: var(--radius-main);
+            overflow: hidden;
             cursor: pointer;
-            transition: border-color 0.2s ease;
-            display: flex;
-            flex-direction: column;
+            transition: transform 0.2s, border-color 0.2s;
         }
 
         .car-card:hover {
-            border-color: var(--accent);
+            transform: translateY(-2px);
+            border-color: var(--text-muted);
         }
 
         .car-card-img-container {
-            width: 100%;
-            height: 180px;
-            background-color: #1a1a1a;
-            border-bottom: 1px solid var(--border-color);
-            position: relative;
+            height: 160px;
+            background: #25252b;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
         }
 
         .car-card-img {
@@ -144,51 +140,192 @@
             object-fit: cover;
         }
 
-        .car-card-content {
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
         .car-card-title {
+            padding: 15px 15px 5px 15px;
             font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 5px;
+            font-weight: 600;
         }
 
         .car-card-dealer {
+            padding: 0 15px;
             font-size: 12px;
             color: var(--text-muted);
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .car-card-footer {
+            padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: auto;
-            font-size: 14px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 10px;
         }
 
         .car-card-price {
-            font-weight: 700;
             color: var(--accent-green);
+            font-weight: 700;
         }
 
-        /* СТИЛИ ДЛЯ ДЕТАЛЕЙ И КОРЗИНЫ */
-        .no-data {
-            grid-column: 1 / -1;
-            padding: 60px 20px;
-            text-align: center;
+        /* СТРАНИЦА ДЕТАЛЕЙ */
+        .screen { display: none; }
+        .screen.active-screen { display: block; }
+
+        .btn-back {
+            background: transparent;
             color: var(--text-muted);
-            border: 1px dashed var(--border-color);
+            border: none;
+            cursor: pointer;
+            padding: 10px 0;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .details-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: var(--radius-main);
+        }
+
+        .main-detail-img {
+            width: 100%;
+            border-radius: 6px;
+            background: var(--bg-input);
+        }
+
+        .price-tag {
+            font-size: 28px;
+            color: var(--accent-green);
+            font-weight: 800;
+            margin: 15px 0;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 25px 0;
+            background: var(--bg-main);
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .btn-primary {
+            background: var(--text-main);
+            color: var(--bg-main);
+            border: none;
+            padding: 14px 28px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* МОДАЛКА */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: var(--radius-main);
+            text-align: center;
+            max-width: 400px;
         }
     </style>
 </head>
 <body>
+    <header class="top-header">
+        <div class="logo">CarMarket.ES</div>
+        <div class="nav-menu">
+            <button class="nav-link active" id="menu-transport-btn">Каталог</button>
+            <button class="nav-link" id="menu-cart-btn">
+                Корзина <span id="cart-badge" class="badge" style="display:none;">●</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="main-layout">
+        
+        <div id="screen-catalog" class="screen active-screen">
+            <div class="catalog-container">
+                <aside class="left-sidebar">
+                    <div class="sidebar-block">
+                        <h3>Поиск</h3>
+                        <input type="text" id="search-input" class="search-input" placeholder="Введите модель...">
+                    </div>
+                    <div class="sidebar-block">
+                        <h3>Автосалон</h3>
+                        <select id="salon-select" class="filter-select"></select>
+                    </div>
+                    <div class="sidebar-block">
+                        <h3>Транспорт</h3>
+                        <select id="transport-select" class="filter-select"></select>
+                    </div>
+                    <div class="sidebar-block">
+                        <h3>Сортировка</h3>
+                        <select id="sort-select" class="filter-select"></select>
+                    </div>
+                </aside>
+
+                <section class="catalog-content">
+                    <div class="cars-grid" id="cars-grid-container"></div>
+                </section>
+            </div>
+        </div>
+
+        <div id="screen-details" class="screen">
+            <button class="btn-back" id="btn-back-to-catalog">← Назад в каталог</button>
+            <div class="details-container">
+                <div class="details-media">
+                    <img id="detail-img" src="" alt="Автомобиль" class="main-detail-img">
+                </div>
+                <div class="details-info">
+                    <h1 id="detail-title">Название машины</h1>
+                    <div class="price-tag" id="detail-price">$0</div>
+                    <p id="detail-desc" class="car-description"></p>
+                    
+                    <div class="specs-grid">
+                        <div class="spec-item"><strong>Год:</strong> <span id="spec-year">-</span></div>
+                        <div class="spec-item"><strong>Привод:</strong> <span id="spec-drive">-</span></div>
+                        <div class="spec-item"><strong>Пробег:</strong> <span id="spec-mileage">-</span></div>
+                        <div class="spec-item"><strong>КПП:</strong> <span id="spec-transmission">-</span></div>
+                    </div>
+
+                    <button class="btn-primary" id="action-buy-click">Купить в один клик</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="screen-cart" class="screen">
+            <div class="cart-page-container">
+                <h2>Ваша корзина</h2>
+                <div id="cart-empty-msg" class="empty-notify">Корзина пуста. Выберите автомобиль в каталоге.</div>
+                <div id="cart-item-row" class="cart-card-item" style="display: none;">
+                    <img id="cart-item-img" src="" alt="">
+                    <div class="cart-item-details">
+                        <h3 id="cart-item-name"></h3>
+                        <p id="cart-item-price" class="cart-price"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="success-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div id="modal-car-name">Товар успешно добавлен!</div>
+            <button class="btn-primary" id="btn-close-modal" style="margin-top: 20px;">Ок</button>
+        </div>
+    </div>
+</body>
 
     <header>
         <div class="top-nav">
@@ -220,185 +357,190 @@
         </div>
     </main>
 
-    <script>
-        // БАЗА ДАННЫХ
+    // 1. БАЗА ДАННЫХ
         const carsData = [
-            // Салон: AutoZentrum Berlin (Берлин)
-            { id: 1, salon: 'berlin', brand: 'Volkswagen', name: 'Volkswagen Golf', price: '$18 500', priceRaw: 18500, qty: 18, year: '2020', mileageRaw: 57000, imgName: 'volkswagen_golf.png' },
-            { id: 2, salon: 'berlin', brand: 'Skoda', name: 'Skoda Octavia', price: '$20 900', priceRaw: 20900, qty: 16, year: '2021', mileageRaw: 42000, imgName: 'skoda_octavia.png' },
-            { id: 3, salon: 'berlin', brand: 'BMW', name: 'BMW 3 Series', price: '$32 900', priceRaw: 32900, qty: 21, year: '2019', mileageRaw: 68000, imgName: 'bmw_3_series.png' },
-            { id: 4, salon: 'berlin', brand: 'Audi', name: 'Audi A4', price: '$28 900', priceRaw: 28900, qty: 14, year: '2020', mileageRaw: 61000, imgName: 'audi_a4.png' },
-            
-            // Салон: Iberia Motors (Мадрид)
-            { id: 6, salon: 'madrid', brand: 'Toyota', name: 'Toyota Corolla', price: '$17 900', priceRaw: 17900, qty: 20, year: '2021', mileageRaw: 35000, imgName: 'toyota_corolla.png' },
-            { id: 7, salon: 'madrid', brand: 'Honda', name: 'Honda Civic', price: '$19 900', priceRaw: 19900, qty: 15, year: '2020', mileageRaw: 49000, imgName: 'honda_civic.png' },
-            { id: 8, salon: 'madrid', brand: 'Ford', name: 'Ford Focus', price: '$16 900', priceRaw: 16900, qty: 17, year: '2018', mileageRaw: 82000, imgName: 'ford_focus.png' },
-            
-            // Салон: Silesia Auto Hub (Варшава)
-            { id: 10, salon: 'warsaw', brand: 'Renault', name: 'Renault Megane', price: '$17 200', priceRaw: 17200, qty: 11, year: '2019', mileageRaw: 73000, imgName: 'renault_megane.png' },
-            { id: 11, salon: 'warsaw', brand: 'Nissan', name: 'Nissan Qashqai', price: '$22 900', priceRaw: 22900, qty: 13, year: '2020', mileageRaw: 45000, imgName: 'nissan_qashqai.png' },
-            { id: 19, salon: 'warsaw', brand: 'Kia', name: 'Kia Sportage', price: '$22 400', priceRaw: 22400, qty: 11, year: '2020', mileageRaw: 54000, imgName: 'kia_sportage.png' },
-            
-            // Салон: Roman Luxury & Electro (Рим)
-            { id: 5, salon: 'rome', brand: 'Mercedes-Benz', name: 'Mercedes-Benz C-Class', price: '$34 900', priceRaw: 34900, qty: 12, year: '2019', mileageRaw: 54000, imgName: 'mercedes-benz_c-class.png' },
-            { id: 15, salon: 'rome', brand: 'BMW', name: 'BMW X3', price: '$41 900', priceRaw: 41900, qty: 8, year: '2020', mileageRaw: 51000, imgName: 'bmw_x3.png' },
-            { id: 16, salon: 'rome', brand: 'Tesla', name: 'Tesla Model 3', price: '$35 900', priceRaw: 35900, qty: 7, year: '2021', mileageRaw: 28000, imgName: 'tesla_model_3.png' }
+            { id: 1, salon: 'berlin', brand: 'Volkswagen', name: 'Volkswagen Golf', price: '$18 500', priceRaw: 18500, type: 'passenger', qty: 18, year: '2020', drive: 'Передний', mileage: '57 000 км', mileageRaw: 57000, transmission: 'Автомат', imgName: 'volkswagen_golf.png' },
+            { id: 2, salon: 'berlin', brand: 'Skoda', name: 'Skoda Octavia', price: '$20 900', priceRaw: 20900, type: 'passenger', qty: 16, year: '2021', drive: 'Передний', mileage: '42 000 км', mileageRaw: 42000, transmission: 'Автомат', imgName: 'skoda_octavia.png' },
+            { id: 3, salon: 'berlin', brand: 'BMW', name: 'BMW 3 Series', price: '$32 900', priceRaw: 32900, type: 'passenger', qty: 21, year: '2019', drive: 'Задний', mileage: '68 000 км', mileageRaw: 68000, transmission: 'Автомат', imgName: 'bmw_3_series.png' },
+            { id: 4, salon: 'berlin', brand: 'Audi', name: 'Audi A4', price: '$28 900', priceRaw: 28900, type: 'passenger', qty: 14, year: '2020', drive: 'Передний', mileage: '61 000 км', mileageRaw: 61000, transmission: 'Автомат', imgName: 'audi_a4.png' },
+            { id: 6, salon: 'madrid', brand: 'Toyota', name: 'Toyota Corolla', price: '$17 900', priceRaw: 17900, type: 'passenger', qty: 20, year: '2021', drive: 'Передний', mileage: '35 000 км', mileageRaw: 35000, transmission: 'Вариатор', imgName: 'toyota_corolla.png' },
+            { id: 7, salon: 'madrid', brand: 'Honda', name: 'Honda Civic', price: '$19 900', priceRaw: 19900, type: 'passenger', qty: 15, year: '2020', drive: 'Передний', mileage: '49 000 км', mileageRaw: 49000, transmission: 'Автомат', imgName: 'honda_civic.png' },
+            { id: 10, salon: 'warsaw', brand: 'Renault', name: 'Renault Megane', price: '$17 200', priceRaw: 17200, type: 'passenger', qty: 11, year: '2019', drive: 'Передний', mileage: '73 000 км', mileageRaw: 73000, transmission: 'Механика', imgName: 'renault_megane.png' },
+            { id: 5, salon: 'rome', brand: 'Mercedes-Benz', name: 'Mercedes-Benz C-Class', price: '$34 900', priceRaw: 34900, type: 'passenger', qty: 12, year: '2019', drive: 'Задний', mileage: '54 000 км', mileageRaw: 54000, transmission: 'Автомат', imgName: 'mercedes-benz_c-class.png' }
         ];
 
-        // Глобальные стейты фильтров
-        let currentSalon = 'all';
-        let currentModel = 'all';
-        let currentSort = 'popular';
-        let searchString = '';
+        // Глобальные переменные состояния
+        let selectedSalon = 'all';
+        let selectedModel = 'all';
+        let selectedSort = 'popular';
+        let searchWord = '';
+        let currentCart = null;
 
-        // DOM Кэш
-        const salonSelect = document.getElementById('salon-main-select');
-        const transportSelect = document.getElementById('transport-main-select');
-        const sortSelect = document.getElementById('sort-main-select');
-        const searchInput = document.getElementById('main-search-input');
-        const carsGrid = document.getElementById('main-cars-grid');
-
+        // Поиск элементов на странице
         const catalogScreen = document.getElementById('screen-catalog');
+        const detailsScreen = document.getElementById('screen-details');
         const cartScreen = document.getElementById('screen-cart');
-        const menuCatalogBtn = document.getElementById('menu-transport-btn');
-        const menuCartBtn = document.getElementById('menu-cart-btn');
+        const carsGrid = document.getElementById('cars-grid-container');
+        const modal = document.getElementById('success-modal');
 
-        // ИНИЦИАЛИЗАЦИЯ И СВЯЗЫВАНИЕ ФИЛЬТРОВ
-        function buildInterface() {
-            // 1. Автосалоны
+        // ИНИЦИАЛИЗАЦИЯ СЕЛЕКТОРОВ В ЛЕВОЙ ПАНЕЛИ
+        function initSelectors() {
+            const salonSelect = document.getElementById('salon-select');
+            const transportSelect = document.getElementById('transport-select');
+            const sortSelect = document.getElementById('sort-select');
+            const searchInput = document.getElementById('search-input');
+
             if (salonSelect) {
                 salonSelect.innerHTML = `
-                    <option value="all">Все автосалоны (Вся Европа)</option>
-                    <option value="berlin">AutoZentrum Berlin (Берлин)</option>
-                    <option value="madrid">Iberia Motors (Мадрид)</option>
-                    <option value="warsaw">Silesia Auto Hub (Варшава)</option>
-                    <option value="rome">Roman Luxury & Electro (Рим)</option>
+                    <option value="all">Все автосалоны</option>
+                    <option value="berlin">AutoZentrum Berlin</option>
+                    <option value="madrid">Iberia Motors</option>
+                    <option value="warsaw">Silesia Auto Hub</option>
+                    <option value="rome">Roman Luxury</option>
                 `;
-                salonSelect.addEventListener('change', (e) => {
-                    currentSalon = e.target.value;
-                    renderCatalog();
-                });
+                salonSelect.onchange = (e) => { selectedSalon = e.target.value; renderCatalog(); };
             }
 
-            // 2. Группировка транспорта по маркам
             if (transportSelect) {
-                const uniqueBrands = [...new Set(carsData.map(c => c.brand))].sort();
-                let options = '<option value="all">Выбор транспорта (Все модели)</option>';
-                
-                uniqueBrands.forEach(brand => {
-                    options += `<optgroup label="${brand}">`;
-                    const brandModels = [...new Set(carsData.filter(c => c.brand === brand).map(c => c.name))].sort();
-                    brandModels.forEach(model => {
-                        options += `<option value="${model}">${model}</option>`;
-                    });
-                    options += `</optgroup>`;
+                const brands = [...new Set(carsData.map(c => c.brand))].sort();
+                let optionsHTML = '<option value="all">Все модели</option>';
+                brands.forEach(brand => {
+                    optionsHTML += `<optgroup label="${brand}">`;
+                    const models = [...new Set(carsData.filter(c => c.brand === brand).map(c => c.name))].sort();
+                    models.forEach(model => { optionsHTML += `<option value="${model}">${model}</option>`; });
+                    optionsHTML += `</optgroup>`;
                 });
-                transportSelect.innerHTML = options;
-                transportSelect.addEventListener('change', (e) => {
-                    currentModel = e.target.value;
-                    renderCatalog();
-                });
+                transportSelect.innerHTML = optionsHTML;
+                transportSelect.onchange = (e) => { selectedModel = e.target.value; renderCatalog(); };
             }
 
-            // 3. Рабочая сортировка
             if (sortSelect) {
                 sortSelect.innerHTML = `
-                    <option value="popular">Сортировать: Популярные</option>
-                    <option value="price-asc">Цена: От дешевых к дорогим</option>
-                    <option value="price-desc">Цена: От дорогих к дешевым</option>
-                    <option value="year-desc">Год выпуска: Свежие</option>
-                    <option value="mileage-asc">Пробег: Минимальный</option>
+                    <option value="popular">Популярные</option>
+                    <option value="price-asc">Цена: дешевые сначала</option>
+                    <option value="price-desc">Цена: дорогие сначала</option>
+                    <option value="year-desc">По году выпуска</option>
                 `;
-                sortSelect.addEventListener('change', (e) => {
-                    currentSort = e.target.value;
-                    renderCatalog();
-                });
+                sortSelect.onchange = (e) => { selectedSort = e.target.value; renderCatalog(); };
             }
 
-            // 4. Поисковая строка
             if (searchInput) {
-                searchInput.addEventListener('input', (e) => {
-                    searchString = e.target.value.toLowerCase();
-                    renderCatalog();
-                });
+                searchInput.oninput = (e) => { searchWord = e.target.value.toLowerCase(); renderCatalog(); };
             }
         }
 
-        // РЕНДЕРИНГ КАТАЛОГА ПО ФИЛЬТРАМ И СОРТИРОВКЕ
+        // ОТРИСОВКА КАТАЛОГА КАРТОЧЕК
         function renderCatalog() {
             if (!carsGrid) return;
             carsGrid.innerHTML = '';
-
-            // Шаг А: Фильтрация данных
-            let result = carsData.filter(car => {
-                const passSearch = car.name.toLowerCase().includes(searchString);
-                const passSalon = (currentSalon === 'all') || (car.salon === currentSalon);
-                const passModel = (currentModel === 'all') || (car.name === currentModel);
-                return passSearch && passSalon && passModel;
+            
+            let filteredCars = carsData.filter(car => {
+                const matchesSearch = car.name.toLowerCase().includes(searchWord);
+                const matchesSalon = (selectedSalon === 'all') || (car.salon === selectedSalon);
+                const matchesModel = (selectedModel === 'all') || (car.name === selectedModel);
+                return matchesSearch && matchesSalon && matchesModel;
             });
+            
+            if (selectedSort === 'price-asc') filteredCars.sort((a, b) => a.priceRaw - b.priceRaw);
+            else if (selectedSort === 'price-desc') filteredCars.sort((a, b) => b.priceRaw - a.priceRaw);
+            else if (selectedSort === 'year-desc') filteredCars.sort((a, b) => parseInt(b.year) - parseInt(a.year));
+            else if (selectedSort === 'popular') filteredCars.sort((a, b) => b.qty - a.qty);
 
-            // Шаг Б: Сортировка данных
-            if (currentSort === 'price-asc') {
-                result.sort((a, b) => a.priceRaw - b.priceRaw);
-            } else if (currentSort === 'price-desc') {
-                result.sort((a, b) => b.priceRaw - a.priceRaw);
-            } else if (currentSort === 'year-desc') {
-                result.sort((a, b) => parseInt(b.year) - parseInt(a.year));
-            } else if (currentSort === 'mileage-asc') {
-                result.sort((a, b) => a.mileageRaw - b.mileageRaw);
-            } else if (currentSort === 'popular') {
-                result.sort((a, b) => b.qty - a.qty);
-            }
-
-            // Вывод заглушки, если ничего не найдено
-            if (result.length === 0) {
-                carsGrid.innerHTML = '<div class="no-data">Подходящих транспортных средств не найдено.</div>';
+            if (filteredCars.length === 0) {
+                carsGrid.innerHTML = '<div style="padding:40px; text-align:center; width:100%; color:var(--text-muted);">Машины не найдены</div>';
                 return;
             }
 
-            // Шаг В: Генерация чистых квадратных карточек
-            result.forEach(car => {
+            filteredCars.forEach(car => {
                 const card = document.createElement('div');
                 card.className = 'car-card';
+                // Восстановлен клик по всей карточке для перехода в детализацию!
+                card.onclick = () => openDetails(car);
                 card.innerHTML = `
                     <div class="car-card-img-container">
-                        <span style="font-size:11px; color:var(--text-muted)">[Фото ${car.brand}]</span>
+                        <img src="Car/${car.imgName}" class="car-card-img" alt="${car.name}" onerror="this.style.display='none'">
                     </div>
-                    <div class="car-card-content">
-                        <div class="car-card-title">${car.name}</div>
-                        <div class="car-card-dealer">Год: ${car.year} | Салон: ${car.salon.toUpperCase()}</div>
-                        <div class="car-card-footer">
-                            <div class="car-card-price">${car.price}</div>
-                            <div style="color:var(--text-muted); font-size:12px;">В наличии: ${car.qty} шт</div>
-                        </div>
+                    <div class="car-card-title">${car.name}</div>
+                    <div class="car-card-dealer">Дилер в регионе ${car.salon.toUpperCase()}</div>
+                    <div class="car-card-footer">
+                        <div class="car-card-price">${car.price}</div>
+                        <div style="color:var(--text-muted); font-size:12px;">Осталось: ${car.qty} шт</div>
                     </div>
                 `;
                 carsGrid.appendChild(card);
             });
         }
 
-        // ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ
-        function setScreen(target) {
+        // ОТКРЫТИЕ ДЕТАЛЬНОЙ СТРАНИЦЫ МАШИНЫ
+        function openDetails(car) {
+            if (catalogScreen) catalogScreen.classList.remove('active-screen');
+            if (cartScreen) cartScreen.classList.remove('active-screen');
+            if (detailsScreen) detailsScreen.classList.add('active-screen');
+            
+            document.getElementById('detail-img').src = `Car/${car.imgName}`;
+            document.getElementById('detail-title').innerText = car.name;
+            document.getElementById('detail-price').innerText = car.price;
+            document.getElementById('detail-desc').innerText = `Оригинальный ${car.name} напрямую со склада официального дилера европейского автосалона. Полный комплект оригинальной документации.`;
+            
+            document.getElementById('spec-year').innerText = car.year;
+            document.getElementById('spec-drive').innerText = car.drive;
+            document.getElementById('spec-mileage').innerText = car.mileage;
+            document.getElementById('spec-transmission').innerText = car.transmission;
+        }
+
+        // НАВИГАЦИЯ МЕЖДУ ЭКРАНАМИ ШАПКИ
+        function switchScreen(target) {
+            if (catalogScreen) catalogScreen.classList.remove('active-screen');
+            if (detailsScreen) detailsScreen.classList.remove('active-screen');
+            if (cartScreen) cartScreen.classList.remove('active-screen');
+            
+            document.getElementById('menu-transport-btn').classList.remove('active');
+            document.getElementById('menu-cart-btn').classList.remove('active');
+
             if (target === 'catalog') {
                 catalogScreen.classList.add('active-screen');
-                cartScreen.classList.remove('active-screen');
-                menuCatalogBtn.classList.add('active');
-                menuCartBtn.classList.remove('active');
-                document.getElementById('header-filters-block').style.display = 'flex';
-            } else {
-                catalogScreen.classList.remove('active-screen');
+                document.getElementById('menu-transport-btn').classList.add('active');
+            } else if (target === 'cart') {
                 cartScreen.classList.add('active-screen');
-                menuCatalogBtn.classList.remove('active');
-                menuCartBtn.classList.add('active');
-                document.getElementById('header-filters-block').style.display = 'none';
+                document.getElementById('menu-cart-btn').classList.add('active');
+                renderCartPage();
             }
         }
 
-        menuCatalogBtn.addEventListener('click', () => setScreen('catalog'));
-        menuCartBtn.addEventListener('click', () => setScreen('cart'));
+        // КНОПКА КУПИТЬ И ОФОРМЛЕНИЕ В ОДИН КЛИК
+        document.getElementById('action-buy-click').onclick = () => {
+            const title = document.getElementById('detail-title').innerText;
+            const priceText = document.getElementById('detail-price').innerText;
+            const img = document.getElementById('detail-img').src;
+
+            currentCart = { name: title, price: priceText, img: img };
+            document.getElementById('cart-badge').style.display = 'inline-block';
+
+            document.getElementById('modal-car-name').innerHTML = `Вы успешно оформили в 1 клик автомобиль <strong>${title}</strong>!<br> Данные отправлены дилеру.`;
+            if (modal) modal.style.display = 'flex';
+        };
+
+        function renderCartPage() {
+            if (currentCart) {
+                document.getElementById('cart-empty-msg').style.display = 'none';
+                document.getElementById('cart-item-row').style.display = 'flex';
+                document.getElementById('cart-item-img').src = currentCart.img;
+                document.getElementById('cart-item-name').innerText = currentCart.name;
+                document.getElementById('cart-item-price').innerText = currentCart.price;
+            } else {
+                document.getElementById('cart-empty-msg').style.display = 'block';
+                document.getElementById('cart-item-row').style.display = 'none';
+            }
+        }
+
+        // ПРИВЯЗКА НАВИГАЦИОННЫХ КНОПОК
+        document.getElementById('menu-transport-btn').onclick = () => switchScreen('catalog');
+        document.getElementById('menu-cart-btn').onclick = () => switchScreen('cart');
+        document.getElementById('btn-back-to-catalog').onclick = () => switchScreen('catalog');
+        document.getElementById('btn-close-modal').onclick = () => { if (modal) modal.style.display = 'none'; };
 
         // СТАРТ ПРИЛОЖЕНИЯ
-        buildInterface();
+        initSelectors();
         renderCatalog();
     </script>
 </body>
