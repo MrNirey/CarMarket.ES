@@ -244,7 +244,7 @@
         </div>
     </div>
 
-    <div class="screen" id="screen-cart">
+   <div class="screen" id="screen-cart">
             <div class="catalog-layout">
                 <div class="filters-sidebar">
                     <div class="filter-section">
@@ -268,10 +268,10 @@
                 </div>
 
                 <div style="flex:1; display:flex; flex-direction:column; gap:15px;">
-                    <div class="table-container" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                    <div class="table-container" style="background: var(--bg-card); border: 1px solid var(--border-color); overflow: hidden;">
                         <div class="table-title">Выбранный автомобиль к покупке</div>
                         <div id="cart-empty-msg" style="padding:30px; text-align:center; color:var(--text-muted);">Ваша корзина пуста. Выберите автомобиль в каталоге.</div>
-                        <div id="cart-item-row" style="display:none; align-items:center; justify-content:between; padding:20px; border-bottom:1px solid var(--border-color);">
+                        <div id="cart-item-row" style="display:none; align-items:center; justify-content:space-between; padding:20px; border-bottom:1px solid var(--border-color);">
                             <div style="display:flex; align-items:center; gap:20px;">
                                 <div style="width:80px; height:50px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.02);"><img src="" id="cart-item-img" style="max-width:100%; max-height:100%; object-fit:contain;"></div>
                                 <div>
@@ -286,14 +286,14 @@
                         </div>
                     </div>
 
-                    <div id="cart-checkout-block" style="display:none; background: var(--bg-card); border: 1px solid var(--border-color); padding:20px; display:none; flex-direction:column; gap:20px;">
+                    <div id="cart-checkout-block" style="display:none; background: var(--bg-card); border: 1px solid var(--border-color); padding:20px; flex-direction:column; gap:20px;">
                         <div>
                             <div class="payment-methods-title">Выберите способ оплаты (Кликабельно)</div>
                             <div class="payment-methods-grid" style="margin-bottom:0;">
-                                <div class="pay-badge active-pay" class="cart-pay-option" style="cursor:pointer;" onclick="selectPay(this)"><i class="fa-brands fa-bitcoin" style="color:#f7931a;"></i>Bitcoin</div>
-                                <div class="pay-badge" class="cart-pay-option" style="cursor:pointer;" onclick="selectPay(this)"><i class="fa-brands fa-ethereum" style="color:#627eea;"></i>Ethereum</div>
-                                <div class="pay-badge" class="cart-pay-option" style="cursor:pointer;" onclick="selectPay(this)"><i class="fa-solid fa-credit-card" style="color:#eb001b;"></i>Карта банка</div>
-                                <div class="pay-badge" class="cart-pay-option" style="cursor:pointer;" onclick="selectPay(this)"><i class="fa-solid fa-wallet" style="color:#ff8c00;"></i>QIWI Кошелек</div>
+                                <div class="pay-badge active-pay" style="cursor:pointer;" onclick="selectPay(this)"><i class="fa-brands fa-bitcoin" style="color:#f7931a;"></i>Bitcoin</div>
+                                <div class="pay-badge" style="cursor:pointer;" onclick="selectPay(this)"><i class="fa-brands fa-ethereum" style="color:#627eea;"></i>Ethereum</div>
+                                <div class="pay-badge" style="cursor:pointer;" onclick="selectPay(this)"><i class="fa-solid fa-credit-card" style="color:#eb001b;"></i>Карта банка</div>
+                                <div class="pay-badge" style="cursor:pointer;" onclick="selectPay(this)"><i class="fa-solid fa-wallet" style="color:#ff8c00;"></i>QIWI Кошелек</div>
                             </div>
                         </div>
 
@@ -308,7 +308,7 @@
                             </div>
                         </div>
 
-                        <div style="display:flex; justify-content:between; align-items:center;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
                             <div style="font-size:14px; color:var(--text-muted);">
                                 Общая стоимость с учетом доставки: <span id="final-total-price" style="font-size:20px; font-weight:800; color:white; margin-left:10px;">$0</span>
                             </div>
@@ -318,9 +318,17 @@
                 </div>
             </div>
         </div>
+    </div> <div class="modal" id="success-modal">
+        <div class="modal-content">
+            <div class="modal-icon" style="font-size:50px; color:var(--accent-green);"><i class="fa-solid fa-circle-check"></i></div>
+            <h2 style="margin-top:15px;">Поздравляем!</h2>
+            <p style="color: var(--text-muted); margin-top: 10px;" id="modal-car-name">Операция выполнена успешно.</p>
+            <button class="btn-close-modal" id="btn-close-modal">Отлично</button>
+        </div>
+    </div>
 
     <script>
-        // Данные с путями к папке Car/
+        // База данных машин
         const carsData = [
             { id: 1, name: 'Volkswagen Golf', price: '$18 500', type: 'passenger', qty: 18, year: '2020', drive: 'Передний', mileage: '57 000 км', transmission: 'Автомат', imgName: 'volkswagen_golf.png' },
             { id: 2, name: 'Skoda Octavia', price: '$20 900', type: 'passenger', qty: 16, year: '2021', drive: 'Передний', mileage: '42 000 км', transmission: 'Автомат', imgName: 'skoda_octavia.png' },
@@ -345,11 +353,21 @@
         ];
 
         let selectedType = 'all';
+        let currentCart = null;
+        let originalDeliveryCost = 0;
+        let discountPercent = 0;
+
         const catalogScreen = document.getElementById('screen-catalog');
         const detailsScreen = document.getElementById('screen-details');
+        const cartScreen = document.getElementById('screen-cart');
         const carsGrid = document.getElementById('cars-grid-container');
         const modal = document.getElementById('success-modal');
 
+        const menuTransport = document.getElementById('menu-transport-btn');
+        const menuCart = document.getElementById('menu-cart-btn');
+        const headerFilters = document.querySelector('.header-filters');
+
+        // Отрисовка каталога
         function renderCatalog() {
             carsGrid.innerHTML = '';
             const searchWord = document.getElementById('search-input').value.toLowerCase();
@@ -377,6 +395,29 @@
             });
         }
 
+        // Переключение вкладок
+        function switchScreen(target) {
+            catalogScreen.classList.remove('active-screen');
+            detailsScreen.classList.remove('active-screen');
+            cartScreen.classList.remove('active-screen');
+            if (menuTransport) menuTransport.classList.remove('active');
+            if (menuCart) menuCart.classList.remove('active');
+            
+            if (target === 'catalog') {
+                catalogScreen.classList.add('active-screen');
+                if (menuTransport) menuTransport.classList.add('active');
+                if (headerFilters) { headerFilters.style.opacity = '1'; headerFilters.style.pointerEvents = 'auto'; }
+            } else if (target === 'cart') {
+                cartScreen.classList.add('active-screen');
+                if (menuCart) menuCart.classList.add('active');
+                if (headerFilters) { headerFilters.style.opacity = '0'; headerFilters.style.pointerEvents = 'none'; }
+                renderCartPage();
+            }
+        }
+
+        if (menuTransport) menuTransport.onclick = () => switchScreen('catalog');
+        if (menuCart) menuCart.onclick = () => switchScreen('cart');
+
         function calculateDelivery() {
             const distance = parseInt(document.getElementById('delivery-country').value);
             const finalCost = Math.round(distance * 1.5 + 200);
@@ -386,6 +427,7 @@
         function openDetails(car) {
             catalogScreen.classList.remove('active-screen');
             detailsScreen.classList.add('active-screen');
+            if (cartScreen) cartScreen.classList.remove('active-screen');
             
             document.getElementById('detail-img').src = `Car/${car.imgName}`;
             document.getElementById('detail-title').innerText = car.name;
@@ -406,52 +448,7 @@
             `;
         }
 
-        document.getElementById('delivery-country').onchange = calculateDelivery;
-        document.getElementById('delivery-city').oninput = calculateDelivery;
-
-        document.getElementById('btn-back-to-catalog').onclick = () => { detailsScreen.classList.remove('active-screen'); catalogScreen.classList.add('active-screen'); };
-        document.getElementById('filter-all-btn').onclick = function() { document.getElementById('filter-cars-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'all'; renderCatalog();};
-        document.getElementById('filter-cars-btn').onclick = function() { document.getElementById('filter-all-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'passenger'; renderCatalog();};
-        document.getElementById('apply-filters-btn').onclick = () => { renderCatalog(); };
-        
-     // ОБНОВЛЕННАЯ ЛОГИКА ОКНА ПОКУПКИ (ДОБАВЛЕНИЕ В КОРЗИНУ)
-        document.getElementById('action-buy-click').onclick = () => { 
-            // Глобальный объект для хранения данных о текущей корзине
-        let currentCart = null;
-        let originalDeliveryCost = 0;
-        let discountPercent = 0;
-
-        // Навигация по страницам
-        const cartScreen = document.getElementById('screen-cart');
-        const menuTransport = document.getElementById('menu-transport-btn');
-        const menuCart = document.getElementById('menu-cart-btn');
-        const headerFilters = document.querySelector('.header-filters');
-
-        function switchScreen(target) {
-            catalogScreen.classList.remove('active-screen');
-            detailsScreen.classList.remove('active-screen');
-            cartScreen.classList.remove('active-screen');
-            menuTransport.classList.remove('active');
-            menuCart.classList.remove('active');
-            
-            if (target === 'catalog') {
-                catalogScreen.classList.add('active-screen');
-                menuTransport.classList.add('active');
-                headerFilters.style.opacity = '1';
-                headerFilters.style.pointerEvents = 'auto';
-            } else if (target === 'cart') {
-                cartScreen.classList.add('active-screen');
-                menuCart.classList.add('active');
-                headerFilters.style.opacity = '0'; // Скрываем фильтры автосалона на странице корзины
-                headerFilters.style.pointerEvents = 'none';
-                renderCartPage();
-            }
-        }
-
-        menuTransport.onclick = () => switchScreen('catalog');
-        menuCart.onclick = () => switchScreen('cart');
-
-        // Логика кнопки "Купить сейчас" на странице деталей
+        // Кнопка добавить в корзину
         document.getElementById('action-buy-click').onclick = () => { 
             const carName = document.getElementById('detail-title').innerText; 
             const city = document.getElementById('delivery-city').value || 'выбранный город';
@@ -462,9 +459,8 @@
             const carPriceRaw = document.getElementById('detail-price').innerText;
             const deliveryCostRaw = Math.round(distance * 1.5 + 200);
             
-            // Записываем данные в корзину
             originalDeliveryCost = deliveryCostRaw;
-            discountPercent = 0; // Сбрасываем промокод при новой покупке
+            discountPercent = 0; 
             
             currentCart = {
                 name: carName,
@@ -475,10 +471,9 @@
                 img: document.getElementById('detail-img').src
             };
 
-            // Обновляем бейдж на иконке корзины
-            document.getElementById('cart-badge').style.display = 'inline-block';
+            const badge = document.getElementById('cart-badge');
+            if (badge) badge.style.display = 'inline-block';
 
-            // Красивый текст для модального окна добавления
             document.getElementById('modal-car-name').innerHTML = `
                 Товар <strong>${carName}</strong> успешно добавлен в корзину!<br><br>
                 <span style="font-size: 13px; color: var(--text-muted);">
@@ -488,7 +483,6 @@
             `; 
             
             document.getElementById('btn-close-modal').innerText = "Перейти в корзину";
-            // При нажатии на кнопку модалки — сразу кидаем в корзину
             document.getElementById('btn-close-modal').onclick = () => {
                 modal.style.display = 'none';
                 switchScreen('cart');
@@ -497,29 +491,27 @@
             modal.style.display = 'flex'; 
         };
 
-        // Отрисовка страницы корзины
         function renderCartPage() {
             const emptyMsg = document.getElementById('cart-empty-msg');
             const itemRow = document.getElementById('cart-item-row');
             const checkoutBlock = document.getElementById('cart-checkout-block');
             
             if (!currentCart) {
-                emptyMsg.style.display = 'block';
-                itemRow.style.display = 'none';
-                checkoutBlock.style.display = 'none';
+                if (emptyMsg) emptyMsg.style.display = 'block';
+                if (itemRow) itemRow.style.display = 'none';
+                if (checkoutBlock) checkoutBlock.style.display = 'none';
                 return;
             }
 
-            emptyMsg.style.display = 'none';
-            itemRow.style.display = 'flex';
-            checkoutBlock.style.display = 'flex';
+            if (emptyMsg) emptyMsg.style.display = 'none';
+            if (itemRow) itemRow.style.display = 'flex';
+            if (checkoutBlock) checkoutBlock.style.display = 'flex';
 
             document.getElementById('cart-item-img').src = currentCart.img;
             document.getElementById('cart-item-name').innerText = currentCart.name;
             document.getElementById('cart-item-delivery-info').innerText = `Доставка из Берлина в ${currentCart.country}, г. ${currentCart.city}`;
             document.getElementById('cart-item-price').innerText = `$${currentCart.price.toLocaleString()}`;
             
-            // Возвращаем дефолтное состояние строки промокода, если он еще не введен
             if (discountPercent === 0) {
                 document.getElementById('promo-input-container').style.display = 'flex';
                 document.getElementById('promo-success-msg').style.display = 'none';
@@ -529,17 +521,14 @@
             updateCartTotals();
         }
 
-        // Выбор способа оплаты
         function selectPay(element) {
             const badges = document.querySelectorAll('#cart-checkout-block .pay-badge');
             badges.forEach(b => b.classList.remove('active-pay'));
             element.classList.add('active-pay');
         }
 
-        // Проверка и применение промокода "Ветер" / "ветер"
         function applyPromoCode() {
             const promoValue = document.getElementById('promo-field').value.trim();
-            
             if (promoValue === 'ветер') {
                 discountPercent = 5;
             } else if (promoValue === 'Ветер') {
@@ -552,10 +541,8 @@
             const newDeliveryPrice = Math.round(originalDeliveryCost * (1 - discountPercent / 100));
             currentCart.deliveryPrice = newDeliveryPrice;
 
-            // Скрываем строку ввода, делаем её нерабочей
             document.getElementById('promo-input-container').style.display = 'none';
             
-            // Показываем галочку и отчет о скидке
             const successMsg = document.getElementById('promo-success-msg');
             const textStatus = document.getElementById('promo-text-status');
             
@@ -565,18 +552,16 @@
             updateCartTotals();
         }
 
-        // Пересчет финальной стоимости
         function updateCartTotals() {
             if (!currentCart) return;
             document.getElementById('cart-item-del-price').innerText = `Доставка: $${currentCart.deliveryPrice.toLocaleString()}`;
-            
             const total = currentCart.price + currentCart.deliveryPrice;
             document.getElementById('final-total-price').innerText = `$${total.toLocaleString()}`;
         }
 
-        // Финальное оформление заказа
         function confirmFinalOrder() {
-            const activePaymentMethod = document.querySelector('#cart-checkout-block .active-pay').innerText.trim();
+            const activePayEl = document.querySelector('#cart-checkout-block .active-pay');
+            const activePaymentMethod = activePayEl ? activePayEl.innerText.trim() : 'выбранную систему';
             
             document.getElementById('modal-car-name').innerHTML = `
                 Успешно! С Вашего счета списано <strong>${document.getElementById('final-total-price').innerText}</strong> через <strong>${activePaymentMethod}</strong>.<br><br>
@@ -586,43 +571,23 @@
             document.getElementById('btn-close-modal').innerText = "Отлично";
             document.getElementById('btn-close-modal').onclick = () => {
                 modal.style.display = 'none';
-                currentCart = null; // Очищаем корзину после покупки
-                document.getElementById('cart-badge').style.display = 'none';
+                currentCart = null; 
+                const badge = document.getElementById('cart-badge');
+                if (badge) badge.style.display = 'none';
                 switchScreen('catalog');
             };
             
             modal.style.display = 'flex';
         }
 
-        // Стандартные настройки запуска
-        document.getElementById('btn-back-to-catalog').onclick = () => { detailsScreen.classList.remove('active-screen'); catalogScreen.classList.add('active-screen'); };
+        document.getElementById('delivery-country').onchange = calculateDelivery;
+        document.getElementById('delivery-city').oninput = calculateDelivery;
+        document.getElementById('btn-back-to-catalog').onclick = () => switchScreen('catalog');
         document.getElementById('filter-all-btn').onclick = function() { document.getElementById('filter-cars-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'all'; renderCatalog();};
         document.getElementById('filter-cars-btn').onclick = function() { document.getElementById('filter-all-btn').classList.remove('active'); this.classList.add('active'); selectedType = 'passenger'; renderCatalog();};
         document.getElementById('apply-filters-btn').onclick = () => { renderCatalog(); };
         document.getElementById('btn-close-modal').onclick = () => { modal.style.display = 'none'; };
         
-        renderCatalog();
-    </script>
-</body>
-</html>
-            
-            // Красивый текст для окна корзины
-            document.getElementById('modal-car-name').innerHTML = `
-                Товар <strong>${carName}</strong> успешно добавлен в вашу корзину!<br><br>
-                <span style="font-size: 13px; color: var(--text-muted);">
-                    Оформлена доставка в: <strong>${country}, г. ${city}</strong>.<br>
-                    Для завершения платежа и подтверждения заказа перейдите в корзину.
-                </span>
-            `; 
-            
-            // Меняем текст на кнопке закрытия в самом окне, чтобы она вела дальше
-            document.getElementById('btn-close-modal').innerText = "Перейти в корзину";
-            
-            // Показываем окно
-            modal.style.display = 'flex'; 
-        };
-        
-        document.getElementById('btn-close-modal').onclick = () => { modal.style.display = 'none'; };
         renderCatalog();
     </script>
 </body>
