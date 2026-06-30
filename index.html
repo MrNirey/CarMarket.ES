@@ -15,7 +15,7 @@
             --text-main: #ffffff;
             --text-muted: #8a8d93;
             --border-color: #262930;
-            --border-radius-flat: 2px;
+            --border-radius-flat: 0px; /* Полностью квадратные углы */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; user-select: none; }
@@ -39,6 +39,7 @@
         .balance-cash { color: #2ecc71; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 5px; }
         .balance-total { color: var(--text-muted); font-size: 11px; margin-top: 2px; }
         .header-right { display: flex; align-items: center; gap: 20px; }
+        .btn-create { background: var(--accent-blue); color: white; border: none; padding: 10px 20px; border-radius: var(--border-radius-flat); font-weight: 600; cursor: pointer; }
 
         /* Screens */
         .screen { display: none; flex: 1; padding: 25px; overflow-y: auto; }
@@ -139,7 +140,7 @@
                     <div class="balance-cash">$1 559 <i class="fa-solid fa-briefcase" style="margin-left: 5px;"></i></div>
                     <div class="balance-total">$2 248 840 🖥️</div>
                 </div>
-                <button class="btn-create" style="background: #2575fc; padding: 10px 20px;">+ Создать</button>
+                <button class="btn-create">+ Создать</button>
             </div>
         </div>
 
@@ -177,6 +178,7 @@
                             <div class="car-title-large" id="detail-title">Загрузка...</div>
                             <div class="car-price-large" id="detail-price">$0</div>
                             
+                            <!-- Калькулятор Доставки -->
                             <div class="delivery-box">
                                 <div class="delivery-title"><i class="fa-solid fa-truck-ramp-box"></i> Расчет доставки из Берлина</div>
                                 <div class="delivery-fields">
@@ -195,6 +197,7 @@
                                 </div>
                             </div>
 
+                            <!-- Демо-способы оплаты -->
                             <div class="payment-methods-title">Способы оплаты (Демо)</div>
                             <div class="payment-methods-grid">
                                 <div class="pay-badge"><i class="fa-brands fa-bitcoin" style="color:#f7931a;"></i>BTC</div>
@@ -250,7 +253,7 @@
     </div>
 
     <script>
-        // ДАННЫЕ С ПУТЯМИ К ТВОЕЙ ПАПКЕ Car/
+        // Данные с путями к папке Car/
         const carsData = [
             { id: 1, name: 'Volkswagen Golf', price: '$18 500', type: 'passenger', qty: 18, year: '2020', drive: 'Передний', mileage: '57 000 км', transmission: 'Автомат', imgName: 'volkswagen_golf.png' },
             { id: 2, name: 'Skoda Octavia', price: '$20 900', type: 'passenger', qty: 16, year: '2021', drive: 'Передний', mileage: '42 000 км', transmission: 'Автомат', imgName: 'skoda_octavia.png' },
@@ -309,7 +312,6 @@
 
         function calculateDelivery() {
             const distance = parseInt(document.getElementById('delivery-country').value);
-            // 1 км = $1.5 доставки + базовый тариф $200
             const finalCost = Math.round(distance * 1.5 + 200);
             document.getElementById('delivery-cost').innerText = `$${finalCost.toLocaleString()}`;
         }
