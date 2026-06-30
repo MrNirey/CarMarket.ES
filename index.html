@@ -367,14 +367,26 @@
         const headerFilters = document.querySelector('.header-filters');
 
         // Отрисовка каталога
+      // БЕЗОПАСНАЯ ОТРИСОВКА КАТАЛОГА
         function renderCatalog() {
+            if (!carsGrid) return; // Защита, если контейнер не найден
             carsGrid.innerHTML = '';
-            const searchWord = document.getElementById('search-input').value.toLowerCase();
+            
+            // Безопасное получение поискового слова (даже если ID другой или отсутствует)
+            const searchEl = document.getElementById('search-input') || document.querySelector('.search-input');
+            const searchWord = searchEl ? searchEl.value.toLowerCase() : '';
+            
             const filteredCars = carsData.filter(car => {
                 const matchesSearch = car.name.toLowerCase().includes(searchWord);
                 const matchesType = (selectedType === 'all') || (car.type === selectedType);
                 return matchesSearch && matchesType;
             });
+            
+            if (filteredCars.length === 0) {
+                carsGrid.innerHTML = '<div style="padding: 20px; color: var(--text-muted);">Машины не найдены</div>';
+                return;
+            }
+
             filteredCars.forEach(car => {
                 const card = document.createElement('div');
                 card.className = 'car-card';
@@ -393,7 +405,6 @@
                 carsGrid.appendChild(card);
             });
         }
-
         // Переключение вкладок
         // Переключение вкладок с фиксом верхнего меню
         function switchScreen(target) {
